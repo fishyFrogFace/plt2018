@@ -1,6 +1,9 @@
 module Lib
     ( add
     , fib
+    , listOfEven
+    , safeFib
+    , safeHead
     ) where
 
 -- TASK 1
@@ -17,7 +20,45 @@ add n m = n + m
 -- finish the function "fib" that calculates the
 -- nth fibonnaci number 
 -- assuming that 0th = 0 and 1st = 1
-fib :: Int -> Int
+-- do not worry about the fuction being partial
+fib :: Integer -> Integer
 fib 0 = 0
 fib 1 = 1
 fib n = fib (n-2) + fib (n-1)
+
+-- TASK 3
+-- List comprehensions
+
+-- create a list "listOfEven" which contains all 
+-- even numbers that are equal or greater than 0
+listOfEven = [2*x | x <- [0..]]
+
+-- TASK 4
+-- Working with lists
+
+-- TASK 5
+-- Currying
+
+-- Task 6
+-- Parametric polymorphism
+
+-- Task 7
+-- Partial functions
+
+-- complete the function "fibSafe" that
+-- returns Nothing if it's called with
+-- a negative number
+safeFib :: Integer -> Maybe Integer
+safeFib n
+    | n < 0     = Nothing
+    | otherwise = Just (fib n)
+
+-- create the function "head" that takes
+-- a list and returns the first element of
+-- that list
+-- if the list is empty, return Nothing
+-- write an appropriate type signature
+
+safeHead :: [a] -> Maybe a
+safeHead []     = Nothing
+safeHead (x:xs) = Just x
