@@ -1,0 +1,52 @@
+-- This file has been generated from package.yaml by hpack version 0.20.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: bc9008cd8ab877ce859b7e6d3de6d102e10c155e0e5fc606c2a14b915980e9db
+
+name:           ex1code
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/ex1code#readme>
+homepage:       https://github.com/githubuser/ex1code#readme
+bug-reports:    https://github.com/githubuser/ex1code/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2018 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+
+extra-source-files:
+    ChangeLog.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/ex1code
+
+library
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_ex1code
+  default-language: Haskell2010
+
+test-suite ex1codeSol-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      QuickCheck >=2.11.3 && <3
+    , base >=4.7 && <5
+    , ex1code
+    , hspec >=2.5.4 && <3
+  other-modules:
+      Paths_ex1code
+  default-language: Haskell2010
