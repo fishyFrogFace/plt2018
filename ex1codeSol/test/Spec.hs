@@ -15,6 +15,9 @@ genList :: Gen [Int]
 genList = listOf1 $ choose (-100, 100)
 
 cart = [(4,3),(4,7),(4,9),(6,3),(6,7),(6,9),(8,3),(8,7),(8,9)]
+negList = [-10..(-1)]
+mixList = [-10, -4, 347, -9, 0, 0, 2, -2, 0, 1, -27]
+manyCheck = [[], negList, mixList]
 
 main :: IO ()
 main = hspec $ do
@@ -88,13 +91,25 @@ main = hspec $ do
             map' (+1) [] `shouldBe` []
         it "applies a function to all elements" $ do
             map' (+2) [1..10] `shouldBe` [3..12]
-    
+   
+    describe "filterPos" $ do
+        it "returns empty list for empty list" $ do
+            filterPos [] `shouldBe` []
+        it "returns empty list for list of negative integers" $ do
+            filterPos negList `shouldBe` []
+        it "filters out negative entries of a list" $ do
+            filterPos mixList `shouldBe` [347, 0, 0, 2, 0, 1]
+
+    describe "filterPosMany" $ do
+        it "filters all lists in a list" $ do
+            filterPosMany manyCheck `shouldBe` [[], [], [347, 0, 0, 2, 0, 1]]
+
     describe "safeFib" $ do
         it "returns Nothing for negative Integers" $ do
             property $ forAll genNeg $ \n -> safeFib n == Nothing
         it "returns Just nth for the nth fibonnacci number" $ do
             map safeFib [0..20] `shouldBe` map (\n -> Just n) fib21
-
+    
     describe "safeHead" $ do
         it "returns Nothing for empty list" $ do
             safeHead [] `shouldBe` (Nothing :: Maybe Int)

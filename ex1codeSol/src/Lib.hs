@@ -10,6 +10,8 @@ module Lib
     , id'
     , take'
     , map'
+    , filterPos
+    , filterPosMany
     , safeFib
     , safeHead
     ) where
@@ -40,16 +42,19 @@ fib n = fib (n-2) + fib (n-1)
 
 -- create a list "listOfEven" which contains all 
 -- even numbers that are equal or greater than 0
+-- use a list comprehension
 listOfEven = [2*x | x <- [0..]]
 
 -- create a list of tuples, "zipped"
 -- where each tuple contains the nth entry
 -- in the lists [1..26] and ['a'..'z']
+-- hint: paralell list comprehension
 zipped = [(x,y) | x <- [1..26] | y <- ['a'..'z']]
 
 -- create a list that contains the cartesian
 -- product of the two vectors [4, 6, 8]
 -- and [3, 7, 9]
+-- use a list comprehension
 cartesian = [(x,y) | x <- [4, 6, 8], y <- [3, 7, 9]]
 
 -- TASK 4
@@ -69,10 +74,7 @@ takes _ []     = []
 takes _ [x]    = [x]
 takes n (x:xs) = x : takes (n-1) xs
  
--- TASK 5
--- Currying
-
--- Task 6
+-- Task 5
 -- Parametric polymorphism
 
 -- complete the function "id'" that takes
@@ -99,6 +101,25 @@ map' :: (a -> b) -> [a] -> [b]
 map' f []     = []
 map' f (x:xs) = f x : map' f xs
 
+--Task 6
+-- Currying
+
+-- complete the function filterPos
+-- that takes a list and returns 
+-- a filtered list containing only positive
+-- integers
+-- use currying to achieve this
+filterPos :: [Int] -> [Int]
+filterPos lst = filter (>=0) lst
+
+-- complete the function filterPosMany
+-- that takes a list of lists and returns
+-- a list of lists with only positive
+-- integers
+-- hint: use filterPos and map'
+filterPosMany :: [[Int]] -> [[Int]]
+filterPosMany lst = map' filterPos lst
+
 -- Task 7
 -- Partial functions
 
@@ -115,9 +136,8 @@ safeFib n
 -- that list
 -- if the list is empty, return Nothing
 -- write an appropriate type signature
-
 safeHead :: [a] -> Maybe a
 safeHead []     = Nothing
 safeHead (x:xs) = Just x
 
--- function that catches maybe + includes fmap?
+-- function that catches maybe and does something with the result
