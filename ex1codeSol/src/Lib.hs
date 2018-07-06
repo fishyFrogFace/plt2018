@@ -35,7 +35,7 @@ add n m = n + m
 isVowel :: Char -> Bool
 isVowel chr
     | chr `elem` "aeiouAEIOU" = True
-    | otherwise                 = False
+    | otherwise               = False
 
 -- TASK 2
 -- Recursion
@@ -151,4 +151,4 @@ safeHead :: [a] -> Maybe a
 safeHead []     = Nothing
 safeHead (x:xs) = Just x
 
--- function that catches maybe and does something with the result
+-- function that catches maybe and does something with the result?

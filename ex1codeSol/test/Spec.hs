@@ -85,9 +85,9 @@ main = hspec $ do
 
     describe "take'" $ do
         it "returns an empty list for negative integers" $ do
-            property $ forAll genNeg $ \n -> take' n [1..10] == []
+            property $ forAll genNeg $ \n -> take' n [1..10] == ([]:: [Int])
         it "returns an empty list for n = 0" $ do
-            take' 0 ['a'..'z'] `shouldBe` []
+            take' 0 ['a'..'z'] `shouldBe` ([] :: [Char])
         it "returns an empty list for []" $ do
             take' 5 [] `shouldBe` ([] :: [Int])
         it "returns the n first elements of a list" $ do
