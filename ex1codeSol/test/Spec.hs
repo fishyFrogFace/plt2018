@@ -19,6 +19,9 @@ negList = [-10..(-1)]
 mixList = [-10, -4, 347, -9, 0, 0, 2, -2, 0, 1, -27]
 manyCheck = [[], negList, mixList]
 
+vowels = "aeiouAEIOU"
+nonVowels = "0123456789:;<=>?@BCDFGHJKLMNPQRSTVWXYZ[\\]^_`bcdfghjklmnpqrstvwxyz"
+
 main :: IO ()
 main = hspec $ do
 
@@ -37,6 +40,12 @@ main = hspec $ do
 
         it "is associative" $ do
             property $ \m n o -> add m (add n o) == add (add m n) o
+
+    describe "isVowel" $ do
+        it "returns True for all vowels" $ do
+            map isVowel vowels `shouldBe` replicate (length vowels) True
+        it "returns False for other characters" $ do
+            map isVowel nonVowels `shouldBe` replicate (length nonVowels) False
 
     describe "fib" $ do
         it "can compute the first 21 fibonnaci numbers" $ do

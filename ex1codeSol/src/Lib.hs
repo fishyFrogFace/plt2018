@@ -2,6 +2,7 @@
 
 module Lib
     ( add
+    , isVowel
     , fib
     , listOfEven
     , zipped
@@ -25,6 +26,16 @@ import Prelude hiding (map, take, id)
 -- and returns the sum of them
 add :: Int -> Int -> Int
 add n m = n + m
+
+-- complete the function "isVowel" which
+-- takes a character and returns True
+-- if it's a vowel (English language), False otherwise
+-- hint: a string is a list
+-- hint2: use `elem` from Prelude
+isVowel :: Char -> Bool
+isVowel chr
+    | chr `elem` "aeiouAEIOU" = True
+    | otherwise                 = False
 
 -- TASK 2
 -- Recursion
