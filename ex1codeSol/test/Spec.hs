@@ -63,6 +63,14 @@ main = hspec $ do
         it "returns the whole list if it's shorter than n" $ do
             takeInt 10 [1..5] `shouldBe` [1..5]
 
+    describe "id'" $ do
+        it "returns a String for a String input" $ do
+            id' "a string" `shouldBe` id "a string"
+        it "returns a Bool for a Bool input" $ do
+            id' True `shouldBe` id True
+        it "returns a Double for a Double input" $ do
+            id' (3.0 :: Double) `shouldBe` id (3.0 :: Double)
+
     describe "take'" $ do
         it "returns an empty list for negative integers" $ do
             property $ forAll genNeg $ \n -> take' n [1..10] == []

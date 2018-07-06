@@ -7,13 +7,14 @@ module Lib
     , zipped
     , cartesian
     , takeInt
+    , id'
     , take'
     , map'
     , safeFib
     , safeHead
     ) where
 
-import Prelude hiding (map, take)
+import Prelude hiding (map, take, id)
 
 -- TASK 1
 -- Simple functions
@@ -73,6 +74,13 @@ takes n (x:xs) = x : takes (n-1) xs
 
 -- Task 6
 -- Parametric polymorphism
+
+-- complete the function "id'" that takes
+-- any type and returns output of the same type
+-- hint: there's only one possible function
+-- that can do this
+id' :: a -> a
+id' x = x
 
 -- rewrite the function "takeInt" so that it
 -- accepts a list of any type
