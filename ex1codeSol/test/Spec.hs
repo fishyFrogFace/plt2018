@@ -8,7 +8,7 @@ fib21 = [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765]
 genPos :: Gen Int
 genPos = choose (1, 10000)
 
-genNeg :: Gen Integer
+genNeg :: Gen Int
 genNeg = choose (-25, -1)
 
 genList :: Gen [Int]
@@ -50,6 +50,30 @@ main = hspec $ do
     describe "cartesian" $ do
         it "equals the cartesian product of [4,6,8] and [3,7,9]" $ do
             cartesian `shouldBe` cart
+
+    describe "takeInt" $ do
+        it "returns an empty list for negative integers" $ do
+            property $ forAll genNeg $ \n -> takeInt n [1..10] == []
+        it "returns an empty list for n = 0" $ do
+            takeInt 0 [1..10] `shouldBe` []
+        it "returns an empty list for []" $ do
+            takeInt 5 [] `shouldBe` ([] :: [Int])
+        it "returns the n first elements of a list" $ do
+            takeInt 5 [1..10] `shouldBe` [1..5]
+        it "returns the whole list if it's shorter than n" $ do
+            takeInt 10 [1..5] `shouldBe` [1..5]
+
+    describe "take'" $ do
+        it "returns an empty list for negative integers" $ do
+            property $ forAll genNeg $ \n -> take' n [1..10] == []
+        it "returns an empty list for n = 0" $ do
+            take' 0 ['a'..'z'] `shouldBe` []
+        it "returns an empty list for []" $ do
+            take' 5 [] `shouldBe` ([] :: [Int])
+        it "returns the n first elements of a list" $ do
+            take' 5 ['a'..'z'] `shouldBe` ['a'..'e']
+        it "returns the whole list if it's shorter than n" $ do
+            take' 10 [1..5] `shouldBe` [1..5]
 
     describe "map'" $ do
         it "returns an empty list for f []" $ do
