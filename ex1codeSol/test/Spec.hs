@@ -14,6 +14,8 @@ genNeg = choose (-25, -1)
 genList :: Gen [Int]
 genList = listOf1 $ choose (-100, 100)
 
+cart = [(4,3),(4,7),(4,9),(6,3),(6,7),(6,9),(8,3),(8,7),(8,9)]
+
 main :: IO ()
 main = hspec $ do
 
@@ -40,6 +42,14 @@ main = hspec $ do
     describe "listOfEven" $ do
         it "is an infinite list of even numbers" $ do
             property $ forAll genPos $ \n -> listOfEven !! n == toInteger (2*n)
+
+    describe "zipped" $ do
+        it "equals the zipped list of [1..26] and ['a'..'z']" $ do
+            zipped `shouldBe` zip [1..26] ['a'..'z']
+
+    describe "cartesian" $ do
+        it "equals the cartesian product of [4,6,8] and [3,7,9]" $ do
+            cartesian `shouldBe` cart
 
     describe "map'" $ do
         it "returns an empty list for f []" $ do
