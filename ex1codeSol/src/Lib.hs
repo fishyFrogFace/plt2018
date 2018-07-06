@@ -2,9 +2,12 @@ module Lib
     ( add
     , fib
     , listOfEven
+    , map'
     , safeFib
     , safeHead
     ) where
+
+import Prelude hiding (map)
 
 -- TASK 1
 -- Simple functions
@@ -20,7 +23,6 @@ add n m = n + m
 -- finish the function "fib" that calculates the
 -- nth fibonnaci number 
 -- assuming that 0th = 0 and 1st = 1
--- do not worry about the fuction being partial
 fib :: Integer -> Integer
 fib 0 = 0
 fib 1 = 1
@@ -42,6 +44,14 @@ listOfEven = [2*x | x <- [0..]]
 -- Task 6
 -- Parametric polymorphism
 
+-- complete the function "map'" that
+-- takes a function f: (a -> b), a list [a]
+-- and returns a list where the function f
+-- is applied to all elements
+map' :: (a -> b) -> [a] -> [b]
+map' f []     = []
+map' f (x:xs) = f x : map' f xs
+
 -- Task 7
 -- Partial functions
 
@@ -62,3 +72,5 @@ safeFib n
 safeHead :: [a] -> Maybe a
 safeHead []     = Nothing
 safeHead (x:xs) = Just x
+
+-- function that catches a maybe?

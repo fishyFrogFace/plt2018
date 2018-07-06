@@ -40,6 +40,12 @@ main = hspec $ do
     describe "listOfEven" $ do
         it "is an infinite list of even numbers" $ do
             property $ forAll genPos $ \n -> listOfEven !! n == toInteger (2*n)
+
+    describe "map'" $ do
+        it "returns an empty list for f []" $ do
+            map' (+1) [] `shouldBe` []
+        it "applies a function to all elements" $ do
+            map' (+2) [1..10] `shouldBe` [3..12]
     
     describe "safeFib" $ do
         it "returns Nothing for negative Integers" $ do
