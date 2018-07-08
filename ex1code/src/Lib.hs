@@ -15,6 +15,8 @@ module Lib
     , filterPosMany
     , safeFib
     , safeHead
+    , showHead
+    , fibOfHead
     ) where
 
 import Prelude hiding (map, take, id)
@@ -39,7 +41,7 @@ isVowel = undefined
 -- Recursion
 
 -- finish the function "fib" that calculates the
--- nth fibonnaci number 
+-- nth fibonacci number 
 -- assuming that 0th = 0 and 1st = 1
 fib :: Int -> Int
 fib = undefined
@@ -134,4 +136,22 @@ safeFib = undefined
 --safeHead :: undefined
 safeHead = undefined
 
--- function that catches maybe and does something with the result?
+-- complete the function "showHead" that
+-- takes a list and returns the String
+-- "The first element is <x>" if the list
+-- is not empty and the String "The list is
+-- empty" if there is no first element
+-- use "safeHead" to do this
+showHead :: Show a => [a] -> String
+showHead = undefined
+
+-- OPTIONAL EXERCISE
+-- complete the function "fibOfHead"
+-- that takes a list of integers, takes
+-- the first element of the list, n
+-- and returns the nth fibonacci number
+-- you will need to combine "safeHead"
+-- and safeFib
+-- hint: (>>=) :: Monad m => m a -> (a -> m b) -> m b 
+fibOfHead :: [Int] -> Maybe Int
+fibOfHead = undefined
