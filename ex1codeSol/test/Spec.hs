@@ -12,7 +12,10 @@ genNeg :: Gen Int
 genNeg = choose (-25, -1)
 
 genList :: Gen [Int]
-genList = listOf1 $ choose (-100, 100)
+genList = listOf1 $ elements [3..20]
+
+genNegList :: Gen [Int]
+genNegList = sublistOf [-100, -1]
 
 cart = [(4,3),(4,7),(4,9),(6,3),(6,7),(6,9),(8,3),(8,7),(8,9)]
 negList = [-10..(-1)]
@@ -116,7 +119,7 @@ main = hspec $ do
     describe "safeFib" $ do
         it "returns Nothing for negative Integers" $ do
             property $ forAll genNeg $ \n -> safeFib n == Nothing
-        it "returns Just nth for the nth fibonnacci number" $ do
+        it "returns Just nth for the nth fibonacci number" $ do
             map safeFib [0..20] `shouldBe` map (\n -> Just n) fib21
     
     describe "safeHead" $ do
@@ -124,3 +127,17 @@ main = hspec $ do
             safeHead [] `shouldBe` (Nothing :: Maybe Int)
         it "returns Just x for x:tail" $ do
             property $ forAll genList $ \n -> safeHead n == Just (head n)
+
+    describe "showHead" $ do
+        it "returns \"The list is empty\" for empty list" $ do
+            showHead ([] :: [Int]) `shouldBe` "The list is empty"
+        it "returns \"The first element is <x>\" for x:tail" $ do
+            property $ forAll genList $ \n -> showHead n == "The first element is " ++ show (head n)
+
+    describe "fibOfHead (OPTIONAL EXERCISE)" $ do
+        it "returns Nothing for negative Integers" $ do
+            property $ forAll genNegList $ \n -> fibOfHead n == Nothing
+        it "returns Just nth for the nth fibonacci number" $ do
+            map fibOfHead [[x] | x <- [0..20]] `shouldBe` map (\n -> Just n) fib21 
+        it "returns Nothing for empty list" $ do
+            fibOfHead [] `shouldBe` (Nothing :: Maybe Int)
