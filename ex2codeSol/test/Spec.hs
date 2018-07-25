@@ -6,12 +6,9 @@ import List
 import Prelude hiding (lex)
 
 genList :: Gen [Char]
-genList = sublistOf ['1'..'z']
+genList = sublistOf $ '.':[':'..'~']
 
 recList = [1..5] ++ recList
-
-tokenTest = "2":"250":"+":"-":"*":"/":",":[]
-tokenized = [TokInt 2,TokInt 250,TokOp Plus,TokOp Minus,TokOp Mult,TokOp Div,TokErr]
 
 main :: IO ()
 main = hspec $ do
@@ -74,6 +71,6 @@ main = hspec $ do
         it "tokenizes integers" $ do
             tokenize ["1", "23", "3754924"] `shouldBe` [TokInt 1, TokInt 23, TokInt 3754924]
         it "recognizes erroneous strings" $ do
-            tokenize [".", "7.0", "a", "-10"] `shouldBe` replicate 4 TokErr
+            property $ forAll genList $ \n -> tokenize [n] == [TokErr]
         it "returns empty list for empty input" $ do
             tokenize [] `shouldBe` ([] :: [Token])

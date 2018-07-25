@@ -8,6 +8,7 @@ module Lib
 
 import Prelude hiding (lex)
 import Data.Char (isDigit)
+import Data.Stack
 
 --TokErr is effectively a null type and won't be enforced by the type system
 --the programmer will need to check for it
@@ -49,4 +50,7 @@ token lst
     | otherwise = TokErr
 
 tokenize :: [String] -> [Token]
-tokenize = map token
+tokenize lst = let tokens = map token lst
+                in case (filter (== TokErr) tokens) of
+                    [] -> tokens
+                    _  -> [TokErr]            

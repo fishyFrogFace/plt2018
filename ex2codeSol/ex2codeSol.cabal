@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 072499822a337912e223fca718f1d145842a682eb2acb28005e356e4cbc8dfc4
+-- hash: bf9acdaf3e5c922022f95ead0b5ce896cda39762d548b51265b87415844f82ef
 
 name:           ex2codeSol
 version:        0.1.0.0
@@ -29,7 +29,8 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      Stack >=0.3.2 && <0.4
+    , base >=4.7 && <5
   exposed-modules:
       Lib
       List
@@ -45,6 +46,7 @@ test-suite ex1codeSol-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       QuickCheck >=2.11.3 && <3
+    , Stack >=0.3.2 && <0.4
     , base >=4.7 && <5
     , ex2codeSol
     , hspec >=2.5.4 && <3
