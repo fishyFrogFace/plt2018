@@ -22,7 +22,13 @@ instance Show Token where
     show (TokInt num) = show num
     show TokErr       = "Token Error"
 
-data Op = Plus | Minus | Div | Mult deriving (Show, Eq)
+data Op = Plus
+        | Minus
+        | Div
+        | Mult
+        | Dupl
+        | Flip
+        deriving (Show, Eq)
 
 splitOn :: Eq a => a -> [a] -> [[a]]
 splitOn ch lst = let strip = dropWhile (==ch) lst
@@ -41,10 +47,12 @@ lex :: String -> [String]
 lex lst = splitOn ' ' lst
 
 token :: String -> Token
-token "+" = TokOp Plus
-token "-" = TokOp Minus
-token "/" = TokOp Div
-token "*" = TokOp Mult
+token "+"  = TokOp Plus
+token "-"  = TokOp Minus
+token "/"  = TokOp Div
+token "*"  = TokOp Mult
+token "#"  = TokOp Dupl
+token "--" = TokOp Flip
 token lst
     | isInt lst = TokInt (read lst)
     | otherwise = TokErr
@@ -60,6 +68,8 @@ calc (TokInt x:TokInt y:xs) (TokOp Plus)  = TokInt (x + y):xs
 calc (TokInt x:TokInt y:xs) (TokOp Minus) = TokInt (y - x):xs
 calc (TokInt x:TokInt y:xs) (TokOp Mult)  = TokInt (x * y):xs
 calc (TokInt x:TokInt y:xs) (TokOp Div)   = TokInt (y `div` x):xs
+calc (tok:xs) (TokOp Dupl)                = tok:tok:xs
+calc (TokInt x:xs) (TokOp Flip)           = TokInt (0 - x):xs
 calc lst tok                              = tok:lst
 
 --writing a folding function should be part of
