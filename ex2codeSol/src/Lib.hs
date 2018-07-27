@@ -10,8 +10,6 @@ module Lib
 import Prelude hiding (lex)
 import Data.Char (isDigit)
 
---TokErr is effectively a null type and won't be enforced by the type system
---the programmer will need to check for it
 data Token = TokOp Op
            | TokInt Int
            | TokErr
@@ -72,9 +70,6 @@ calc (tok:xs) (TokOp Dupl)                = tok:tok:xs
 calc (TokInt x:xs) (TokOp Flip)           = TokInt (0 - x):xs
 calc lst tok                              = tok:lst
 
---writing a folding function should be part of
---last exercise or this one
---at least talking about foldl/foldr and differences between them
 interpret :: [Token] -> [Token]
 interpret []       = []
 interpret [TokErr] = [TokErr]
