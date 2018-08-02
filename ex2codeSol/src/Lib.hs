@@ -18,6 +18,11 @@ drop' n (x:xs)
 -- TASK 2
 -- Types, type classes and ad-hoc polymorphism
 
+-- create a number type (complex too complex? natural?)
+-- create a show instance
+-- create a num instance
+-- (+), (*), abs, signum, fromInteger, (negate | (-))
+
 -- create a type class
 -- create types that are instances of the type class
 
