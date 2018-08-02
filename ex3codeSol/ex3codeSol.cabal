@@ -2,13 +2,13 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: cfa179d38a2da8d9e1c401540aa930a7670659daf9c254d97aa4e839a14165aa
+-- hash: c27046b11790b3e66682ff2a5a206cff675edcb023756c2e97368746f3f10f3b
 
-name:           ex2codeSol
+name:           ex3codeSol
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/ex2codeSol#readme>
-homepage:       https://github.com/githubuser/ex2codeSol#readme
-bug-reports:    https://github.com/githubuser/ex2codeSol/issues
+description:    Please see the README on GitHub at <https://github.com/githubuser/ex3codeSol#readme>
+homepage:       https://github.com/githubuser/ex3codeSol#readme
+bug-reports:    https://github.com/githubuser/ex3codeSol/issues
 author:         Author name here
 maintainer:     example@example.com
 copyright:      2018 Author name here
@@ -23,7 +23,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/ex2codeSol
+  location: https://github.com/githubuser/ex3codeSol
 
 library
   hs-source-dirs:
@@ -33,19 +33,19 @@ library
   exposed-modules:
       Lib
   other-modules:
-      Paths_ex2codeSol
+      Paths_ex3codeSol
   default-language: Haskell2010
 
-executable ex2codeSol-exe
+executable ex3codeSol-exe
   main-is: Main.hs
   hs-source-dirs:
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , ex2codeSol
+    , ex3codeSol
   other-modules:
-      Paths_ex2codeSol
+      Paths_ex3codeSol
   default-language: Haskell2010
 
 test-suite ex1codeSol-test
@@ -57,8 +57,8 @@ test-suite ex1codeSol-test
   build-depends:
       QuickCheck >=2.11.3 && <3
     , base >=4.7 && <5
-    , ex2codeSol
+    , ex3codeSol
     , hspec >=2.5.4 && <3
   other-modules:
-      Paths_ex2codeSol
+      Paths_ex3codeSol
   default-language: Haskell2010
