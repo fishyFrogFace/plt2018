@@ -61,7 +61,7 @@ listOfEven = [2*x | x <- [0..]]
 -- create a list of tuples, "zipped"
 -- where each tuple contains the nth entry
 -- in the lists [1..26] and ['a'..'z']
--- hint: paralell list comprehension
+-- hint: parallel list comprehension
 zipped = [(x,y) | x <- [1..26] | y <- ['a'..'z']]
 
 -- create a list that contains the cartesian
