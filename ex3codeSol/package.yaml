@@ -37,7 +37,7 @@ executables:
     - ex3codeSol
 
 tests:
-  ex1codeSol-test:
+  ex3codeSol-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:

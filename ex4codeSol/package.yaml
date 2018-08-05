@@ -1,6 +1,6 @@
-name:                ex2codeSol
+name:                ex4codeSol
 version:             0.1.0.0
-github:              "githubuser/ex2codeSol"
+github:              "githubuser/ex4codeSol"
 license:             BSD3
 author:              "Author name here"
 maintainer:          "example@example.com"
@@ -17,7 +17,7 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/githubuser/ex2codeSol#readme>
+description:         Please see the README on GitHub at <https://github.com/githubuser/ex4codeSol#readme>
 
 dependencies:
 - base >= 4.7 && < 5
@@ -25,8 +25,19 @@ dependencies:
 library:
   source-dirs: src
 
+executables:
+  ex4codeSol-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - ex4codeSol
+
 tests:
-  ex2codeSol-test:
+  ex4codeSol-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -34,6 +45,6 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - ex2codeSol
+    - ex4codeSol
     - hspec >= 2.5.4 && < 3
     - QuickCheck >= 2.11.3 && < 3

@@ -1,9 +1,21 @@
 module Lib
     ( drop'
-    , Tree(..)
+    , fun
     ) where
 
+fun = undefined
+
+--bounded polymorphism (Eq a => a -> Bool), currying, recursion, HOF, type inference, lists/streams/laziness
+
 -- TASK 1
+-- Bounded parametric polymorphism
+
+-- make a function that ties together with the typeclass
+-- and types that are created
+
+-- usage of ad-hoc polymorphism
+
+-- TASK 2
 -- Type inference
 
 --what happens if we let the compiler decide the type signature?
@@ -14,27 +26,6 @@ drop' _ []     = []
 drop' n (x:xs)
     | n > 0     = drop' (n-1) xs
     | otherwise = (x:xs)
-
--- TASK 2
--- Types, type classes and ad-hoc polymorphism
-
--- create a number type (complex too complex? natural?)
--- create a show instance
--- create a num instance
--- (+), (*), abs, signum, fromInteger, (negate | (-))
-
--- create a type class
--- create types that are instances of the type class
-
-data Tree a = undefined
-
--- TASK 3
--- Bounded parametric polymorphism
-
--- make a function that ties together with the typeclass
--- and types that are created
-
--- usage of ad-hoc polymorphism
 
 -- TASK 4
 -- Pattern matching
