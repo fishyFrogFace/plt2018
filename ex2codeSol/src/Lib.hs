@@ -1,22 +1,9 @@
 module Lib
     ( drop'
-    , fun
+    , Complex(..)
     ) where
 
-fun = undefined
-
---bounded polymorphism (Eq a => a -> Bool), currying, recursion, HOF, type inference, lists/streams/laziness
-
 -- TASK 1
--- Bounded parametric polymorphism
-
--- make a function that ties together with the typeclass
--- and types that are created
-
--- usage of ad-hoc polymorphism
-
--- TASK 2
--- Type inference
 
 --what happens if we let the compiler decide the type signature?
 --drop' (Eq t, Num t) => t -> [a] -> [a]
@@ -27,10 +14,34 @@ drop' n (x:xs)
     | n > 0     = drop' (n-1) xs
     | otherwise = (x:xs)
 
--- TASK 4
--- Pattern matching
+-- TASK 2
+-- Types, type classes and ad-hoc polymorphism 
+ 
+data Complex = Complex Double Double deriving (Eq) 
+ 
+instance Show Complex where 
+    show (Complex r i) 
+        | i >= 0 = show r ++ "+" ++ show i ++ "i" 
+        | otherwise = show r ++ "-" ++ show (abs i) ++ "i" 
 
--- explore pattern matching in functions? maybe more heavy on theory?
+-- (+), (*), abs, signum, fromInteger, ((-)|negate) 
+instance Num Complex where 
+    (+) (Complex r1 i1) (Complex r2 i2) = Complex (r1+r2) (i1+i2) 
+    (*) (Complex r1 i1) (Complex r2 i2) = Complex (r1*r2 - i1*i2) (r1*i2 + i1*r2) 
+    abs (Complex r i) = Complex (sqrt (r**2+i**2)) 0 
+    signum (Complex r i) = Complex (r/a) (i/a)
+                                where
+                                a = sqrt (r**2+i**2)
+    fromInteger int = Complex (fromInteger int) 0 
+    (-) (Complex r1 i1) (Complex r2 i2) = Complex (r1-r2) (i1-i2) 
+ 
+-- create a type class 
+-- create types that are instances of the type class, inheritance? 
+ 
+--person => student => teacher, publications, languages, vehicles
+ 
+-- Task 3
+-- Bounded parametric polymorphism pt. 2
 
--- TASK 5
--- Infinite lists and laziness
+-- make a function that ties together with the typeclass
+-- that is created
