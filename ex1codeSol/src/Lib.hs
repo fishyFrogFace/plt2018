@@ -1,13 +1,7 @@
 {-# LANGUAGE ParallelListComp #-}
 
 module Lib
-    ( add
-    , isVowel
-    , fib
-    , listOfEven
-    , zipped
-    , cartesian
-    , takeInt
+    ( takeInt
     , id'
     , take'
     , map'
@@ -22,55 +16,6 @@ module Lib
 import Prelude hiding (map, take, id)
 
 -- TASK 1
--- Simple functions
-
--- finish the function "add" that takes two integers
--- and returns the sum of them
-add :: Int -> Int -> Int
-add n m = n + m
-
--- complete the function "isVowel" which
--- takes a character and returns True
--- if it's a vowel (English language), False otherwise
--- hint: a string is a list
--- hint2: use `elem` from Prelude
-isVowel :: Char -> Bool
-isVowel chr
-    | chr `elem` "aeiouAEIOU" = True
-    | otherwise               = False
-
--- TASK 2
--- Recursion
-
--- finish the function "fib" that calculates the
--- nth fibonacci number 
--- assuming that 0th = 0 and 1st = 1
-fib :: Int -> Int
-fib 0 = 0
-fib 1 = 1
-fib n = fib (n-2) + fib (n-1)
-
--- TASK 3
--- List comprehensions
-
--- create a list "listOfEven" which contains all 
--- even numbers that are equal or greater than 0
--- use a list comprehension
-listOfEven = [2*x | x <- [0..]]
-
--- create a list of tuples, "zipped"
--- where each tuple contains the nth entry
--- in the lists [1..26] and ['a'..'z']
--- hint: parallel list comprehension
-zipped = [(x,y) | x <- [1..26] | y <- ['a'..'z']]
-
--- create a list that contains the cartesian
--- product of the two vectors [4, 6, 8]
--- and [3, 7, 9]
--- use a list comprehension
-cartesian = [(x,y) | x <- [4, 6, 8], y <- [3, 7, 9]]
-
--- TASK 4
 -- Working with lists
 
 -- complete the function "takeInt" that
@@ -87,7 +32,7 @@ takes _ []     = []
 takes _ [x]    = [x]
 takes n (x:xs) = x : takes (n-1) xs
  
--- Task 5
+-- Task 2
 -- Parametric polymorphism
 
 -- complete the function "id'" that takes
@@ -114,7 +59,7 @@ map' :: (a -> b) -> [a] -> [b]
 map' f []     = []
 map' f (x:xs) = f x : map' f xs
 
---Task 6
+--Task 3
 -- Currying
 
 -- complete the function filterPos
@@ -133,8 +78,13 @@ filterPos lst = filter (>=0) lst
 filterPosMany :: [[Int]] -> [[Int]]
 filterPosMany lst = map' filterPos lst
 
--- Task 7
+-- Task 4
 -- Partial functions
+
+fib :: Int -> Int
+fib 0 = 0
+fib 1 = 1
+fib n = fib (n-2) + fib (n-1)
 
 -- complete the function "safeFib" that
 -- returns Nothing if it's called with

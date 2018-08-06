@@ -13,7 +13,7 @@ fun = undefined
 -- create a num instance
 -- (+), (*), abs, signum, fromInteger, (negate | (-))
 
-data Complex = Complex Double Double
+data Complex = Complex Double Double deriving (Eq, Ord)
 
 instance Show Complex where
     show (Complex r i)
@@ -29,4 +29,9 @@ instance Num Complex where
     (-) (Complex r1 i1) (Complex r2 i2) = Complex (r1-r2) (i1-i2)
 
 -- create a type class
--- create types that are instances of the type class
+-- create types that are instances of the type class, inheritance?
+
+--person => student => teacher? publications? languages?
+
+-- TASK 2
+-- Exception handling
