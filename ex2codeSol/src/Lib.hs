@@ -34,14 +34,56 @@ instance Num Complex where
                                 a = sqrt (r**2+i**2)
     fromInteger int = Complex (fromInteger int) 0 
     (-) (Complex r1 i1) (Complex r2 i2) = Complex (r1-r2) (i1-i2) 
- 
--- create a type class 
--- create types that are instances of the type class, inheritance? 
- 
---person => student => teacher, publications, languages, vehicles
- 
+
+-- TASK 3
+
+type Position = (Double, Double)
+
+class Pos a where
+    position :: a -> Position
+
+class (Pos a) => Move a where
+    relocate :: a -> Position -> a
+    belongs :: a -> Position
+    free :: a -> Bool
+
+data Campus = Kalvskinnet
+            | Gløshaugen
+            | Tyholt
+            | Moholt
+            | Dragvoll
+            deriving (Show, Eq)
+
+instance Pos Campus where
+    position Kalvskinnet = (63.429, 10.388)
+    position Gløshaugen  = (63.416, 10.403)
+    position Tyholt      = (63.423, 10.435)
+    position Moholt      = (63.413, 10.434)
+    position Dragvoll    = (63.409, 10.471)
+
+data Car = Car { brand :: String
+               , regnr :: String
+               , isAt :: Position
+               , parking :: Position} deriving (Show)
+
+instance Eq Car where
+    (==) car1 car2 = regnr car1 == regnr car2
+
+instance Pos Car where
+    position = isAt
+
+instance Move Car where
+    relocate car loc = car { isAt = loc }
+    belongs = parking
+    free car = isAt car == parking car
+
+data Person = Employee { fname :: String
+                       , lname :: String
+                       , located :: Position
+                       , keys :: [Int]} deriving (Show)
+
 -- Task 3
--- Bounded parametric polymorphism pt. 2
+-- Ad-hoc polymorphism
 
 -- make a function that ties together with the typeclass
 -- that is created
