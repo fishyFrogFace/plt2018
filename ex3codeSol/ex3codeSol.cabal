@@ -2,28 +2,12 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 51cdbb27f6f56fb5c61aecfa271c53ae774be1cdb29cf7029b5f4ebe07033058
+-- hash: 898be044dc70219f0b5b61ca10d18d9e133620b2748b3e2c4d6d4bdc5d16ca54
 
 name:           ex3codeSol
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/ex3codeSol#readme>
-homepage:       https://github.com/githubuser/ex3codeSol#readme
-bug-reports:    https://github.com/githubuser/ex3codeSol/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2018 Author name here
-license:        BSD3
-license-file:   LICENSE
 build-type:     Simple
 cabal-version:  >= 1.10
-
-extra-source-files:
-    ChangeLog.md
-    README.md
-
-source-repository head
-  type: git
-  location: https://github.com/githubuser/ex3codeSol
 
 library
   hs-source-dirs:

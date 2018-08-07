@@ -2,28 +2,12 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: acac95c5bc8067b4ccecfd8839f187432048b067810a8b054d8022613ff8a72f
+-- hash: 2485cc4ae5e3b0ba6173d230f154a5adcc5f33050f2dec530961ece7ea42bf8c
 
 name:           ex2codeSol
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/ex2codeSol#readme>
-homepage:       https://github.com/githubuser/ex2codeSol#readme
-bug-reports:    https://github.com/githubuser/ex2codeSol/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2018 Author name here
-license:        BSD3
-license-file:   LICENSE
 build-type:     Simple
 cabal-version:  >= 1.10
-
-extra-source-files:
-    ChangeLog.md
-    README.md
-
-source-repository head
-  type: git
-  location: https://github.com/githubuser/ex2codeSol
 
 library
   hs-source-dirs:
