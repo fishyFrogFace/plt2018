@@ -15,6 +15,11 @@ module Lib
 
 import Prelude hiding (map, take, id)
 
+-- lazy/streams
+bot = bot
+
+const1 x = 1
+
 -- TASK 1
 -- Working with lists
 
