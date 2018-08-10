@@ -1,3 +1,6 @@
+{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE FlexibleInstances #-}
+
 module Lib
     ( drop'
     , Complex(..)
@@ -15,7 +18,7 @@ drop' n (x:xs)
     | otherwise = (x:xs)
 
 -- TASK 2
--- Types, type classes and ad-hoc polymorphism 
+-- Num Complex
  
 data Complex = Complex Double Double deriving (Eq) 
  
@@ -36,16 +39,16 @@ instance Num Complex where
     (-) (Complex r1 i1) (Complex r2 i2) = Complex (r1-r2) (i1-i2) 
 
 -- TASK 3
+-- Making your own type classes
 
 type Position = (Double, Double)
 
 class Pos a where
-    position :: a -> Position
+    pos :: a -> Position
 
 class (Pos a) => Move a where
     relocate :: a -> Position -> a
     belongs :: a -> Position
-    free :: a -> Bool
 
 data Campus = Kalvskinnet
             | Gløshaugen
@@ -55,35 +58,47 @@ data Campus = Kalvskinnet
             deriving (Show, Eq)
 
 instance Pos Campus where
-    position Kalvskinnet = (63.429, 10.388)
-    position Gløshaugen  = (63.416, 10.403)
-    position Tyholt      = (63.423, 10.435)
-    position Moholt      = (63.413, 10.434)
-    position Dragvoll    = (63.409, 10.471)
+    pos Kalvskinnet = (63.429, 10.388)
+    pos Gløshaugen  = (63.416, 10.403)
+    pos Tyholt      = (63.423, 10.435)
+    pos Moholt      = (63.413, 10.434)
+    pos Dragvoll    = (63.409, 10.471)
 
 data Car = Car { brand :: String
                , regnr :: String
                , isAt :: Position
+               , key :: Key
                , parking :: Position} deriving (Show)
 
 instance Eq Car where
     (==) car1 car2 = regnr car1 == regnr car2
 
 instance Pos Car where
-    position = isAt
+    pos = isAt
 
 instance Move Car where
     relocate car loc = car { isAt = loc }
     belongs = parking
-    free car = isAt car == parking car
 
-data Person = Employee { fname :: String
-                       , lname :: String
-                       , located :: Position
-                       , keys :: [Int]} deriving (Show)
+data Key = Key { keynr :: Int
+               , located :: Position
+               , cabinet :: Position } deriving (Show)
 
--- Task 3
--- Ad-hoc polymorphism
+instance Pos Key where
+    pos = located
 
--- make a function that ties together with the typeclass
--- that is created
+instance Move Key where
+    relocate key loc = key { located = loc }
+    belongs = cabinet
+
+free :: Move a => a -> Bool
+free object = pos object == belongs object
+
+carAvailable :: Car -> Bool
+carAvailable car = free car || (free $ key car)
+
+distBetween :: Pos a => a -> a -> Position
+distBetween loc object = (abs $ loc1-obj1 , abs $ loc2-obj2)
+                            where
+                            (loc1, loc2) = pos loc
+                            (obj1, obj2) = pos object
