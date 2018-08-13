@@ -42,7 +42,7 @@ main = hspec $ do
 
     describe "subjects" $ do
         it "maps to correct tuples" $ do
-            map (subjects "Haskell") [[], [1], [1,2], [1,2,3]] `shouldBe` zip [None, One, Two, Three] (replicate 4 "Haskell")
+            map (amountOf "Haskell") [[], [1], [1,2], [1,2,3]] `shouldBe` zip [None, One, Two, Three] (replicate 4 "Haskell")
 
     describe "fib" $ do
         it "can compute the first 21 fibonnaci numbers" $ do

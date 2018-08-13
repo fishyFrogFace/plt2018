@@ -4,7 +4,7 @@ module Lib
     ( add
     , isVowel
     , Status(..)
-    , subjects
+    , amountOf
     , fib
     , ending
     , fizzbuzz
@@ -34,13 +34,16 @@ isVowel chr
 data Status = One | Two | Three | None deriving (Show, Eq)
 
 -- complete the function "subjects" which takes
--- a list and a name and returns a tuple with
--- the status (above) and the name
-subjects :: String -> [a] -> (Status, String)
-subjects name []      = (None, name)
-subjects name [_]     = (One, name)
-subjects name [_,_]   = (Two, name)
-subjects name [_,_,_] = (Three, name)
+-- a name and a list of elements
+-- and pattern matches on the amount of elements
+-- in the list
+-- it returns a tuple of a Status (above)
+-- and the name
+amountOf :: String -> [a] -> (Status, String)
+amountOf name []      = (None, name)
+amountOf name [_]     = (One, name)
+amountOf name [_,_]   = (Two, name)
+amountOf name [_,_,_] = (Three, name)
 
 -- TASK 2
 -- Recursion
