@@ -3,7 +3,10 @@
 module Lib
     ( add
     , isVowel
+    , Status(..)
+    , subjects
     , fib
+    , ending
     , fizzbuzz
     , listOfEven
     , zipped
@@ -28,9 +31,16 @@ isVowel chr
     | chr `elem` "aeiouAEIOU" = True
     | otherwise               = False
 
---list function without recursion
+data Status = One | Two | Three | None deriving (Show, Eq)
 
---tuple function
+-- complete the function "subjects" which takes
+-- a list and a name and returns a tuple with
+-- the status (above) and the name
+subjects :: String -> [a] -> (Status, String)
+subjects name []      = (None, name)
+subjects name [_]     = (One, name)
+subjects name [_,_]   = (Two, name)
+subjects name [_,_,_] = (Three, name)
 
 -- TASK 2
 -- Recursion
@@ -57,6 +67,15 @@ fib :: Int -> Int
 fib 0 = 0
 fib 1 = 1
 fib n = fib (n-2) + fib (n-1)
+
+-- complete the function "ing" that takes a list of
+-- strings and returns them with the ending -ing
+-- if the string is empty, remove it from the list
+ending :: [String] -> [String]
+ending []     = []
+ending (x:xs)
+    | x == []   = ending xs
+    | otherwise = (x ++ "ing") : ending xs
 
 -- TASK 3
 -- List comprehensions
