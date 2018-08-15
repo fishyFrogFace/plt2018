@@ -1,7 +1,6 @@
 module Lib
     ( Token(..)
     , Op(..)
-    , splitOn
     , lex
     , tokenize
     , interpret
@@ -18,7 +17,7 @@ data Token = TokOp Op
 instance Show Token where
     show (TokOp op)   = show op
     show (TokInt num) = show num
-    show TokErr       = "Token Error"
+    show TokErr       = "Parser error"
 
 data Op = Plus
         | Minus

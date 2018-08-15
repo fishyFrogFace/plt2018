@@ -7,6 +7,7 @@ module Lib
     , map'
     , filterPos
     , filterPosMany
+    , splitOn
     , safeFib
     , safeHead
     , showHead
@@ -37,7 +38,7 @@ takes _ []     = []
 takes _ [x]    = [x]
 takes n (x:xs) = x : takes (n-1) xs
  
--- Task 2
+-- TASK 2
 -- Parametric polymorphism
 
 -- complete the function "id'" that takes
@@ -64,7 +65,7 @@ map' :: (a -> b) -> [a] -> [b]
 map' f []     = []
 map' f (x:xs) = f x : map' f xs
 
---Task 3
+-- TASK 3
 -- Currying
 
 -- complete the function filterPos
@@ -83,8 +84,30 @@ filterPos lst = filter (>=0) lst
 filterPosMany :: [[Int]] -> [[Int]]
 filterPosMany lst = map' filterPos lst
 
--- Task 4
+-- TASK 4
+-- Bounded parametric polymorphism
+
+splitOn :: Eq a => a -> [a] -> [[a]]
+splitOn ch lst = let strip = dropWhile (==ch) lst
+                 in case strip of
+                    []     -> []
+                    (x:xs) -> n : (splitOn ch b)
+                                where
+                              (n, b) = break (==ch) strip
+
+-- TASK 5
+-- Laziness and streams
+
+-- TASK 6
+-- Folds
+
+--implement a fold for a foldable structure
+
+data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving (Show, Eq)
+
+-- TASK 4
 -- Partial functions
+-- TODO: move to ex5?
 
 fib :: Int -> Int
 fib 0 = 0

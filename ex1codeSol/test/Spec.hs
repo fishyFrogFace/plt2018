@@ -14,13 +14,11 @@ genList = listOf1 $ elements [3..20]
 genNegList :: Gen [Int]
 genNegList = sublistOf [-100, -1]
 
-cart = [(4,3),(4,7),(4,9),(6,3),(6,7),(6,9),(8,3),(8,7),(8,9)]
 negList = [-10..(-1)]
 mixList = [-10, -4, 347, -9, 0, 0, 2, -2, 0, 1, -27]
 manyCheck = [[], negList, mixList]
 
-vowels = "aeiouAEIOU"
-nonVowels = "0123456789:;<=>?@BCDFGHJKLMNPQRSTVWXYZ[\\]^_`bcdfghjklmnpqrstvwxyz"
+recList = [1..5] ++ recList
 
 main :: IO ()
 main = hspec $ do
@@ -74,6 +72,14 @@ main = hspec $ do
     describe "filterPosMany" $ do
         it "filters all lists in a list" $ do
             filterPosMany manyCheck `shouldBe` [[], [], [347, 0, 0, 2, 0, 1]]
+    
+    describe "splitOn" $ do
+        it "splits a list of integers on a given integer" $ do
+            take 3 (splitOn 1 recList) `shouldBe` replicate 3 [2,3,4,5]
+        it "returns an empty list for empty list" $ do
+            splitOn 'a' [] `shouldBe` ([] :: [String])
+        it "removes excess elements" $ do
+            splitOn ';' ";;;;this;;is;;;;;sparta;;;" `shouldBe` ["this", "is", "sparta"]
 
     describe "safeFib" $ do
         it "returns Nothing for negative Integers" $ do
