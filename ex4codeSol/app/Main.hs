@@ -1,5 +1,13 @@
 module Main where
 
 import Lib
+import Control.Monad
 
-main = putStrLn "first commit"
+parse :: String -> [Token]
+parse = interpret . tokenize . Lib.lex
+
+main :: IO ()
+main = forever $ getLine >>= print . parse
+
+mainInfix :: IO ()
+mainInfix = undefined

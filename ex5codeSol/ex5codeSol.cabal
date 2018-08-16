@@ -2,9 +2,9 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ec4fdc37b989cb828a2c4a2bc39b75589cf1b7f96a70b54b700e1b9b66a355b4
+-- hash: 424d889aa4b8f1e0b48eb3fc3af8890b67e2848a5f4d45f9c275ce5709002258
 
-name:           ex0codeSol
+name:           ex5codeSol
 version:        0.1.0.0
 build-type:     Simple
 cabal-version:  >= 1.10
@@ -17,10 +17,22 @@ library
   exposed-modules:
       Lib
   other-modules:
-      Paths_ex0codeSol
+      Paths_ex5codeSol
   default-language: Haskell2010
 
-test-suite ex0codeSol-test
+executable ex5codeSol-exe
+  main-is: Main.hs
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , ex5codeSol
+  other-modules:
+      Paths_ex5codeSol
+  default-language: Haskell2010
+
+test-suite ex5codeSol-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   hs-source-dirs:
@@ -29,8 +41,8 @@ test-suite ex0codeSol-test
   build-depends:
       QuickCheck >=2.11.3 && <3
     , base >=4.7 && <5
-    , ex0codeSol
+    , ex5codeSol
     , hspec >=2.5.4 && <3
   other-modules:
-      Paths_ex0codeSol
+      Paths_ex5codeSol
   default-language: Haskell2010

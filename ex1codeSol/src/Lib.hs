@@ -1,154 +1,104 @@
 {-# LANGUAGE ParallelListComp #-}
 
 module Lib
-    ( takeInt
-    , id'
-    , take'
-    , map'
-    , filterPos
-    , filterPosMany
-    , splitOn
-    , safeFib
-    , safeHead
-    , showHead
-    , fibOfHead
+    ( add
+    , isVowel
+    , Status(..)
+    , amountOf
+    , fib
+    , ending
+    , fizzbuzz
+    , listOfEven
+    , zipped
+    , cartesian
     ) where
 
-import Prelude hiding (map, take, id)
-
--- lazy/streams
-bot = bot
-
-const1 x = 1
-
 -- TASK 1
--- Working with lists
+-- Simple functions
 
--- complete the function "takeInt" that
--- an integer n and a list of integers and
--- returns the first n elements of 
--- the list
-takeInt :: Int -> [Int] -> [Int]
-takeInt n lst
-    | n < 0    = []
-    | otherwise = takes n lst
+-- finish the function "add" that takes two integers
+-- and returns the sum of them
+add :: Int -> Int -> Int
+add n m = n + m
 
-takes 0 _      = []
-takes _ []     = []
-takes _ [x]    = [x]
-takes n (x:xs) = x : takes (n-1) xs
- 
+-- complete the function "isVowel" which
+-- takes a character and returns True
+-- if it's a vowel (English language), False otherwise
+-- hint: a string is a list
+-- hint2: use `elem` from Prelude
+isVowel :: Char -> Bool
+isVowel chr
+    | chr `elem` "aeiouAEIOU" = True
+    | otherwise               = False
+
+data Status = One | Two | Three | None deriving (Show, Eq)
+
+-- complete the function "subjects" which takes
+-- a name and a list of elements
+-- and pattern matches on the amount of elements
+-- in the list
+-- it returns a tuple of a Status (above)
+-- and the name
+amountOf :: String -> [a] -> (Status, String)
+amountOf name []      = (None, name)
+amountOf name [_]     = (One, name)
+amountOf name [_,_]   = (Two, name)
+amountOf name [_,_,_] = (Three, name)
+
 -- TASK 2
--- Parametric polymorphism
+-- Recursion
 
--- complete the function "id'" that takes
--- any type and returns output of the same type
--- hint: there's only one possible function
--- that can do this
-id' :: a -> a
-id' x = x
+-- create fizzbuzz, a list from 1 to 100
+-- where every 3rd element is "Fizz", every
+-- 5th element is "Buzz" and every 15th
+-- element is "FizzBuzz"
+-- hint: use the function "show" from Prelude
+fizzbuzz :: [String]
+fizzbuzz = fizz [1..100]
+            where
+           fizz [] = []
+           fizz (x:xs)
+                | x `mod` 15 == 0 = "FizzBuzz" : fizz xs
+                | x `mod` 3 == 0  = "Fizz" : fizz xs
+                | x `mod` 5 == 0  = "Buzz" : fizz xs
+                | otherwise       = show x : fizz xs
 
--- rewrite the function "takeInt" so that it
--- accepts a list of any type
--- hint: you probably don't have to change much
-
-take' :: Int -> [a] -> [a]
-take' n lst
-    | n <= 0    = []
-    | otherwise = takes n lst
-
--- complete the function "map'" that
--- takes a function f: (a -> b), a list [a]
--- and returns a list where the function f
--- is applied to all elements
-map' :: (a -> b) -> [a] -> [b]
-map' f []     = []
-map' f (x:xs) = f x : map' f xs
-
--- TASK 3
--- Currying
-
--- complete the function filterPos
--- that takes a list and returns 
--- a filtered list containing only positive
--- integers
--- use currying to achieve this
-filterPos :: [Int] -> [Int]
-filterPos lst = filter (>=0) lst
-
--- complete the function filterPosMany
--- that takes a list of lists and returns
--- a list of lists with only positive
--- integers
--- hint: use filterPos and map'
-filterPosMany :: [[Int]] -> [[Int]]
-filterPosMany lst = map' filterPos lst
-
--- TASK 4
--- Bounded parametric polymorphism
-
-splitOn :: Eq a => a -> [a] -> [[a]]
-splitOn ch lst = let strip = dropWhile (==ch) lst
-                 in case strip of
-                    []     -> []
-                    (x:xs) -> n : (splitOn ch b)
-                                where
-                              (n, b) = break (==ch) strip
-
--- TASK 5
--- Laziness and streams
-
--- TASK 6
--- Folds
-
---implement a fold for a foldable structure
-
-data Tree a = Node a (Tree a) (Tree a) | Leaf a deriving (Show, Eq)
-
--- TASK 4
--- Partial functions
--- TODO: move to ex5?
-
+-- finish the function "fib" that calculates the
+-- nth fibonacci number 
+-- assuming that 0th = 0 and 1st = 1
 fib :: Int -> Int
 fib 0 = 0
 fib 1 = 1
 fib n = fib (n-2) + fib (n-1)
 
--- complete the function "safeFib" that
--- returns Nothing if it's called with
--- a negative number
-safeFib :: Int -> Maybe Int
-safeFib n
-    | n < 0     = Nothing
-    | otherwise = Just (fib n)
+-- complete the function "ing" that takes a list of
+-- strings and returns them with the ending -ing
+-- if the string is empty, remove it from the list
+ending :: [String] -> [String]
+ending []     = []
+ending (x:xs)
+    | x == []   = ending xs
+    | otherwise = (x ++ "ing") : ending xs
 
--- create the function "safeHead" that takes
--- a list and returns the first element of
--- that list
--- if the list is empty, return Nothing
--- write an appropriate type signature
-safeHead :: [a] -> Maybe a
-safeHead []     = Nothing
-safeHead (x:xs) = Just x
+-- TASK 3
+-- List comprehensions
 
--- complete the function "showHead" that
--- takes a list and returns the String
--- "The first element is <x>" if the list
--- is not empty and the String "The list is
--- empty" if there is no first element
--- use "safeHead" to do this
-showHead :: Show a => [a] -> String
-showHead lst = case (safeHead lst) of
-                Nothing -> "The list is empty"
-                Just x  -> "The first element is " ++ show x
+-- create a list "listOfEven" which contains all 
+-- even numbers that are equal or greater than 0
+-- use a list comprehension
+listOfEven :: [Integer]
+listOfEven = [2*x | x <- [0..]]
 
--- OPTIONAL EXERCISE
--- complete the function "fibOfHead"
--- that takes a list of integers, takes
--- the first element of the list, n
--- and returns the nth fibonacci number
--- you will need to combine "safeHead"
--- and safeFib
--- hint: (>>=) :: Monad m => m a -> (a -> m b) -> m b 
-fibOfHead :: [Int] -> Maybe Int
-fibOfHead lst = safeHead lst >>= safeFib
+-- create a list of tuples, "zipped"
+-- where each tuple contains the nth entry
+-- in the lists [1..26] and ['a'..'z']
+-- hint: parallel list comprehension
+zipped :: [(Int, Char)]
+zipped = [(x,y) | x <- [1..26] | y <- ['a'..'z']]
+
+-- create a list that contains the cartesian
+-- product of the two vectors [4, 6, 8]
+-- and [3, 7, 9]
+-- use a list comprehension
+cartesian :: [(Int, Int)]
+cartesian = [(x,y) | x <- [4, 6, 8], y <- [3, 7, 9]]
