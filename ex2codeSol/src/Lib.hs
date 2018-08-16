@@ -1,8 +1,7 @@
 {-# LANGUAGE ParallelListComp #-}
 
 module Lib
-    ( takeInt
-    , id'
+    ( id'
     , take'
     , map'
     , filterPos
@@ -20,25 +19,8 @@ import Prelude hiding (map, take, id)
 bot = bot
 
 const1 x = 1
-
--- TASK 1
--- Working with lists
-
--- complete the function "takeInt" that
--- an integer n and a list of integers and
--- returns the first n elements of 
--- the list
-takeInt :: Int -> [Int] -> [Int]
-takeInt n lst
-    | n < 0    = []
-    | otherwise = takes n lst
-
-takes 0 _      = []
-takes _ []     = []
-takes _ [x]    = [x]
-takes n (x:xs) = x : takes (n-1) xs
  
--- TASK 2
+-- TASK 1
 -- Parametric polymorphism
 
 -- complete the function "id'" that takes
@@ -56,6 +38,14 @@ take' :: Int -> [a] -> [a]
 take' n lst
     | n <= 0    = []
     | otherwise = takes n lst
+
+takes 0 _      = []
+takes _ []     = []
+takes _ [x]    = [x]
+takes n (x:xs) = x : takes (n-1) xs
+
+-- TASK 2
+-- Higher order functions
 
 -- complete the function "map'" that
 -- takes a function f: (a -> b), a list [a]

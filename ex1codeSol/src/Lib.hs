@@ -7,6 +7,7 @@ module Lib
     , amountOf
     , fib
     , ending
+    , takeInt
     , fizzbuzz
     , listOfEven
     , zipped
@@ -48,6 +49,40 @@ amountOf name [_,_,_] = (Three, name)
 -- TASK 2
 -- Recursion
 
+-- finish the function "fib" that calculates the
+-- nth fibonacci number 
+-- assuming that 0th = 0 and 1st = 1
+fib :: Int -> Int
+fib 0 = 0
+fib 1 = 1
+fib n = fib (n-2) + fib (n-1)
+
+-- TASK 3
+-- Working with lists
+
+-- complete the function "ing" that takes a list of
+-- strings and returns them with the ending -ing
+-- if the string is empty, remove it from the list
+ending :: [String] -> [String]
+ending []     = []
+ending (x:xs)
+    | x == []   = ending xs
+    | otherwise = (x ++ "ing") : ending xs
+
+-- complete the function "takeInt" that
+-- an integer n and a list of integers and
+-- returns the first n elements of 
+-- the list
+takeInt :: Int -> [Int] -> [Int]
+takeInt n lst
+    | n < 0    = []
+    | otherwise = takes n lst
+
+takes 0 _      = []
+takes _ []     = []
+takes _ [x]    = [x]
+takes n (x:xs) = x : takes (n-1) xs
+
 -- create fizzbuzz, a list from 1 to 100
 -- where every 3rd element is "Fizz", every
 -- 5th element is "Buzz" and every 15th
@@ -62,23 +97,6 @@ fizzbuzz = fizz [1..100]
                 | x `mod` 3 == 0  = "Fizz" : fizz xs
                 | x `mod` 5 == 0  = "Buzz" : fizz xs
                 | otherwise       = show x : fizz xs
-
--- finish the function "fib" that calculates the
--- nth fibonacci number 
--- assuming that 0th = 0 and 1st = 1
-fib :: Int -> Int
-fib 0 = 0
-fib 1 = 1
-fib n = fib (n-2) + fib (n-1)
-
--- complete the function "ing" that takes a list of
--- strings and returns them with the ending -ing
--- if the string is empty, remove it from the list
-ending :: [String] -> [String]
-ending []     = []
-ending (x:xs)
-    | x == []   = ending xs
-    | otherwise = (x ++ "ing") : ending xs
 
 -- TASK 3
 -- List comprehensions

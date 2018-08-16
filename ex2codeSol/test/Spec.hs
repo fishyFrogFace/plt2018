@@ -23,18 +23,6 @@ recList = [1..5] ++ recList
 main :: IO ()
 main = hspec $ do
 
-    describe "takeInt" $ do
-        it "returns an empty list for negative integers" $ do
-            property $ forAll genNeg $ \n -> takeInt n [1..10] == []
-        it "returns an empty list for n = 0" $ do
-            takeInt 0 [1..10] `shouldBe` []
-        it "returns an empty list for []" $ do
-            takeInt 5 [] `shouldBe` ([] :: [Int])
-        it "returns the n first elements of a list" $ do
-            takeInt 5 [1..10] `shouldBe` [1..5]
-        it "returns the whole list if it's shorter than n" $ do
-            takeInt 10 [1..5] `shouldBe` [1..5]
-
     describe "id'" $ do
         it "returns a String for a String input" $ do
             id' "a string" `shouldBe` id "a string"
