@@ -9,10 +9,13 @@ module Lib
     , ending
     , takeInt
     , fizzbuzz
+    , printFizz
     , listOfEven
     , zipped
     , cartesian
     ) where
+
+import Control.Monad (mapM_)
 
 -- TASK 1
 -- Simple functions
@@ -52,6 +55,7 @@ amountOf name [_,_,_] = (Three, name)
 -- finish the function "fib" that calculates the
 -- nth fibonacci number 
 -- assuming that 0th = 0 and 1st = 1
+-- do not optimize it
 fib :: Int -> Int
 fib 0 = 0
 fib 1 = 1
@@ -83,11 +87,7 @@ takes _ []     = []
 takes _ [x]    = [x]
 takes n (x:xs) = x : takes (n-1) xs
 
--- create fizzbuzz, a list from 1 to 100
--- where every 3rd element is "Fizz", every
--- 5th element is "Buzz" and every 15th
--- element is "FizzBuzz"
--- hint: use the function "show" from Prelude
+-- implement "fizzbuzz" as described in exercise 1
 fizzbuzz :: [String]
 fizzbuzz = fizz [1..100]
             where
@@ -97,6 +97,9 @@ fizzbuzz = fizz [1..100]
                 | x `mod` 3 == 0  = "Fizz" : fizz xs
                 | x `mod` 5 == 0  = "Buzz" : fizz xs
                 | otherwise       = show x : fizz xs
+
+printFizz :: IO ()
+printFizz = mapM_ putStrLn fizzbuzz
 
 -- TASK 3
 -- List comprehensions
