@@ -77,7 +77,7 @@ fizzbuzz = undefined
 printFizz :: IO ()
 printFizz = mapM_ putStrLn fizzbuzz
 
--- TASK 3
+-- TASK 4
 -- List comprehensions
 
 -- create a list "listOfEven" which contains all 
