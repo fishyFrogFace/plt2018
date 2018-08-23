@@ -31,17 +31,14 @@ add n m = n + m
 -- hint: a string is a list
 -- hint2: use `elem` from Prelude
 isVowel :: Char -> Bool
-isVowel chr
-    | chr `elem` "aeiouAEIOU" = True
-    | otherwise               = False
+isVowel chr = chr `elem` "aeiouAEIOU"
 
 data Status = One | Two | Three | None deriving (Show, Eq)
 
 -- complete the function "subjects" which takes
--- a name and a list of elements
--- and pattern matches on the amount of elements
--- in the list
--- it returns a tuple of a Status (above)
+-- a name and a list of subjects
+-- it then pattern matches on the amount of subjects in the list
+-- and returns a tuple of a Status (look above, describes the amount of subjects in the list)
 -- and the name
 amountOf :: String -> [a] -> (Status, String)
 amountOf name []      = (None, name)

@@ -35,11 +35,10 @@ isVowel chr = undefined
 
 data Status = One | Two | Three | None deriving (Show, Eq)
 
--- complete the function "subjects" which takes
--- a name and a list of elements
--- and pattern matches on the amount of elements
--- in the list
--- it returns a tuple of a Status (above)
+-- complete the function "amountOf" which takes
+-- a name and a list of subjects
+-- it then pattern matches on the amount of subjects in the list
+-- and returns a tuple of a Status (look above, describes the amount of subjects in the list)
 -- and the name
 amountOf :: String -> [a] -> (Status, String)
 amountOf = undefined
