@@ -88,6 +88,23 @@ splitOn ch lst = let strip = dropWhile (==ch) lst
 -- TASK 5
 -- Laziness and streams
 
+newtons :: Double -> Double -> Double
+newtons x guess = guess - (guess^2 - x)/(2*guess)
+
+approx :: Double -> [Double] -> Double
+approx diff (x:y:xs)
+    | abs (x-y) <= diff = y
+    | otherwise         = approx diff (y:xs)
+
+doubleIsInt :: Double -> Bool
+doubleIsInt x = fromInteger (round x) == x
+
+isSqrNum :: Double -> Double -> Bool
+isSqrNum x guess = doubleIsInt . approx 0.0000001 $ ourInfLst x guess
+
+ourInfLst :: Double -> Double -> [Double]
+ourInfLst x guess = iterate (newtons x) guess
+
 -- TASK 4
 -- Partial functions
 -- TODO: move to ex5?
