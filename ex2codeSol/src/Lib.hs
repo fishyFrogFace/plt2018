@@ -1,37 +1,33 @@
-{-# LANGUAGE ParallelListComp #-}
-
 module Lib
-    ( id'
-    , take'
-    , map'
+    ( id
+    , take
+    , map
+    , iterate
     , filterPos
     , filterPosMany
     , splitOn
     ) where
 
-import Prelude hiding (map, take, id)
+import Prelude hiding (map, take, id, iterate)
 
--- lazy/streams
-bot = bot
-
-const1 x = 1
- 
--- TASK 2
+-- TASK 1
 -- Parametric polymorphism
 
 -- complete the function "id'" that takes
 -- any type and returns output of the same type
 -- hint: there's only one possible function
 -- that can do this
-id' :: a -> a
-id' x = x
+id :: a -> a
+id x = x
 
 -- rewrite the function "takeInt" so that it
 -- accepts a list of any type
+-- if you used the built in function "take" on the
+-- last assignment, write your own implementation of it
 -- hint: you probably don't have to change much
 
-take' :: Int -> [a] -> [a]
-take' n lst
+take :: Int -> [a] -> [a]
+take n lst
     | n <= 0    = []
     | otherwise = takes n lst
 
@@ -40,25 +36,24 @@ takes _ []     = []
 takes _ [x]    = [x]
 takes n (x:xs) = x : takes (n-1) xs
 
--- TASK 3
+-- TASK 2
 -- Higher order functions
 
--- complete the function "map'" that
--- takes a function f: (a -> b), a list [a]
--- and returns a list where the function f
--- is applied to all elements
-map' :: (a -> b) -> [a] -> [b]
-map' f []     = []
-map' f (x:xs) = f x : map' f xs
+map :: (a -> b) -> [a] -> [b]
+map f []     = []
+map f (x:xs) = f x : map f xs
 
--- TASK 4
--- Currying
+iterate :: (a -> a) -> a -> [a]
+iterate f x = x : iterate f (f x)
+
+-- TASK 3
+-- Currying and partial application
 
 -- complete the function filterPos
 -- that takes a list and returns 
 -- a filtered list containing only positive
 -- integers
--- use currying to achieve this
+-- use partial application to achieve this
 filterPos :: [Int] -> [Int]
 filterPos lst = filter (>=0) lst
 
@@ -66,11 +61,15 @@ filterPos lst = filter (>=0) lst
 -- that takes a list of lists and returns
 -- a list of lists with only positive
 -- integers
--- hint: use filterPos and map'
+-- hint: use filterPos and map
 filterPosMany :: [[Int]] -> [[Int]]
-filterPosMany lst = map' filterPos lst
+filterPosMany lst = map filterPos lst
 
--- TASK 5
+flip3 :: (a -> b -> c -> d) -> c -> b -> a -> d
+flip3 f c b a = f a b c
+
+-- move to ex3
+-- TASK 1
 -- Bounded parametric polymorphism
 
 splitOn :: Eq a => a -> [a] -> [[a]]
@@ -81,8 +80,8 @@ splitOn ch lst = let strip = dropWhile (==ch) lst
                                 where
                               (n, b) = break (==ch) strip
 
--- TASK 6
--- Laziness and streams
+-- TASK 4
+-- Infinite lists
 
 newtons :: Double -> Double -> Double
 newtons x guess = guess - (guess^2 - x)/(2*guess)
