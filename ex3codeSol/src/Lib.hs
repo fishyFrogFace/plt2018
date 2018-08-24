@@ -1,9 +1,19 @@
 module Lib
-    ( drop'
+    ( splitOn
+    , drop'
     , Complex(..)
     ) where
 
 -- TASK 1
+-- Bounded parametric polymorphism
+
+splitOn :: Eq a => a -> [a] -> [[a]]
+splitOn ch lst = let strip = dropWhile (==ch) lst
+                 in case strip of
+                    []     -> []
+                    (x:xs) -> n : (splitOn ch b)
+                                where
+                              (n, b) = break (==ch) strip
 
 --what happens if we let the compiler decide the type signature?
 --drop' (Eq t, Num t) => t -> [a] -> [a]

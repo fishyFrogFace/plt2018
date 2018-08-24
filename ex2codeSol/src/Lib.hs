@@ -5,7 +5,6 @@ module Lib
     , iterate
     , filterPos
     , filterPosMany
-    , splitOn
     ) where
 
 import Prelude hiding (map, take, id, iterate)
@@ -67,18 +66,6 @@ filterPosMany lst = map filterPos lst
 
 flip3 :: (a -> b -> c -> d) -> c -> b -> a -> d
 flip3 f c b a = f a b c
-
--- move to ex3
--- TASK 1
--- Bounded parametric polymorphism
-
-splitOn :: Eq a => a -> [a] -> [[a]]
-splitOn ch lst = let strip = dropWhile (==ch) lst
-                 in case strip of
-                    []     -> []
-                    (x:xs) -> n : (splitOn ch b)
-                                where
-                              (n, b) = break (==ch) strip
 
 -- TASK 4
 -- Infinite lists
