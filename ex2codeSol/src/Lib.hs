@@ -1,5 +1,7 @@
 module Lib
     ( id
+    , fst
+    , snd
     , take
     , map
     , iterate
@@ -7,20 +9,24 @@ module Lib
     , filterPosMany
     ) where
 
-import Prelude hiding (map, take, id, iterate)
+import Prelude hiding (map, take, id, iterate, fst, snd)
 
 -- TASK 1
 -- Parametric polymorphism
 
--- Below are three type signatures. Can you implement and name
--- them appropriately? We say a function or implementation
--- /inhabits/ it's type (signature). How many other
--- inhabitants do these types have? What if we fixed a = Int,
--- does that change your previous answer?
-f0 :: a -> a
-f1 :: a -> b -> a
-f2 :: a -> b -> b
+-- Below are three type signatures. Can you implement them? We
+-- say a function or implementation /inhabits/ it's type
+-- (signature). How many other inhabitants do these types
+-- have? What if we fixed a = Int, does that change your
+-- previous answer?
+id :: a -> a
+id = undefined
 
+fst :: a -> b -> a
+fst = undefined 
+
+snd :: a -> b -> b
+snd = undefined
 
 -- rewrite the function "takeInt" so that it
 -- accepts a list of any type
