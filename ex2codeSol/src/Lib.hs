@@ -1,5 +1,7 @@
 module Lib
     ( id
+    , fst
+    , snd
     , take
     , map
     , iterate
@@ -7,17 +9,24 @@ module Lib
     , filterPosMany
     ) where
 
-import Prelude hiding (map, take, id, iterate)
+import Prelude hiding (map, take, id, iterate, fst, snd)
 
 -- TASK 1
 -- Parametric polymorphism
 
--- complete the function "id'" that takes
--- any type and returns output of the same type
--- hint: there's only one possible function
--- that can do this
+-- Below are three type signatures. Can you implement them? We
+-- say a function or implementation /inhabits/ it's type
+-- (signature). How many other inhabitants do these types
+-- have? What if we fixed a = Int, does that change your
+-- previous answer?
 id :: a -> a
-id x = x
+id = undefined
+
+fst :: a -> b -> a
+fst = undefined 
+
+snd :: a -> b -> b
+snd = undefined
 
 -- rewrite the function "takeInt" so that it
 -- accepts a list of any type
