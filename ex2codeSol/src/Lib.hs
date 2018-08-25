@@ -12,12 +12,15 @@ import Prelude hiding (map, take, id, iterate)
 -- TASK 1
 -- Parametric polymorphism
 
--- complete the function "id'" that takes
--- any type and returns output of the same type
--- hint: there's only one possible function
--- that can do this
-id :: a -> a
-id x = x
+-- Below are three type signatures. Can you implement and name
+-- them appropriately? We say a function or implementation
+-- /inhabits/ it's type (signature). How many other
+-- inhabitants do these types have? What if we fixed a = Int,
+-- does that change your previous answer?
+f0 :: a -> a
+f1 :: a -> b -> a
+f2 :: a -> b -> b
+
 
 -- rewrite the function "takeInt" so that it
 -- accepts a list of any type
