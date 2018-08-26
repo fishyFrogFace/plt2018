@@ -16,13 +16,25 @@ manyCheck = [[], negList, mixList]
 main :: IO ()
 main = hspec $ do
 
-    describe "id" $ do
+    describe "f0" $ do
         it "returns a String for a String input" $ do
-            L.id "a string" `shouldBe` Prelude.id "a string"
+            L.f0 "a string" `shouldBe` Prelude.id "a string"
         it "returns a Bool for a Bool input" $ do
-            L.id True `shouldBe` Prelude.id True
+            L.f0 True `shouldBe` Prelude.id True
         it "returns a Double for a Double input" $ do
-            L.id (3.0 :: Double) `shouldBe` Prelude.id (3.0 :: Double)
+            L.f0 (3.0 :: Double) `shouldBe` Prelude.id (3.0 :: Double)
+
+    describe "f1" $ do
+        it "returns a String for a String -> Int input" $ do
+            L.f1 "monkey" 5 `shouldBe` "monkey"
+        it "returns a Bool for a Bool -> String input" $ do
+            L.f1 True "monkey" `shouldBe` True
+
+    describe "f2" $ do        
+        it "returns an Int for a String -> Int input" $ do
+            L.f2 "monkey" 5 `shouldBe` 5
+        it "returns a String for a Bool -> String input" $ do
+            L.f2 True "monkey" `shouldBe` "monkey"
 
     describe "take" $ do
         it "returns an empty list for negative integers" $ do

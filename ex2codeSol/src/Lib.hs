@@ -1,7 +1,7 @@
 module Lib
-    ( id
-    , fst
-    , snd
+    ( f0
+    , f1
+    , f2
     , take
     , map
     , iterate
@@ -9,7 +9,7 @@ module Lib
     , filterPosMany
     ) where
 
-import Prelude hiding (map, take, id, iterate, fst, snd)
+import Prelude hiding (map, take, iterate)
 
 -- TASK 1
 -- Parametric polymorphism
@@ -19,14 +19,14 @@ import Prelude hiding (map, take, id, iterate, fst, snd)
 -- (signature). How many other inhabitants do these types
 -- have? What if we fixed a = Int, does that change your
 -- previous answer?
-id :: a -> a
-id = undefined
+f0 :: a -> a
+f0 x = x
 
-fst :: a -> b -> a
-fst = undefined 
+f1 :: a -> b -> a
+f1 a _ = a
 
-snd :: a -> b -> b
-snd = undefined
+f2 :: a -> b -> b
+f2 _ b = b
 
 -- rewrite the function "takeInt" so that it
 -- accepts a list of any type
