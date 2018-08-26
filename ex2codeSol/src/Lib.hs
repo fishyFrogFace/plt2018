@@ -9,7 +9,7 @@ module Lib
     , filterPosMany
     ) where
 
-import Prelude hiding (map, take, iterate)
+import Prelude hiding (map, take, iterate, sqrt)
 
 -- TASK 1
 -- Parametric polymorphism
@@ -82,16 +82,23 @@ flip3 f c b a = f a b c
 newtons :: Double -> Double -> Double
 newtons x guess = guess - (guess^2 - x)/(2*guess)
 
+ourInfLst :: Double -> Double -> [Double]
+ourInfLst x guess = iterate (newtons x) guess
+
+doubleIsInt :: Double -> Bool
+doubleIsInt x = fromInteger (round x) == x
+
 approx :: Double -> [Double] -> Double
 approx diff (x:y:xs)
     | abs (x-y) <= diff = y
     | otherwise         = approx diff (y:xs)
 
-doubleIsInt :: Double -> Bool
-doubleIsInt x = fromInteger (round x) == x
+isPerfSq :: Double -> Bool
+isPerfSq x = doubleIsInt . approx 0.00000001 $ ourInfLst x (x/2)
 
-isSqrNum :: Double -> Double -> Bool
-isSqrNum x guess = doubleIsInt . approx 0.0000001 $ ourInfLst x guess
-
-ourInfLst :: Double -> Double -> [Double]
-ourInfLst x guess = iterate (newtons x) guess
+accuracy :: Int -> Bool
+accuracy x = take x generated == take x [x^2 | x <- [1..]]
+                where
+             zpd       = zip [1..] (map isPerfSq [1..])
+             f (x,y)   = y == True
+             generated = fst . unzip $ filter f zpd
