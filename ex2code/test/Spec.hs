@@ -48,6 +48,18 @@ main = hspec $ do
         it "returns the whole list if it's shorter than n" $ do
             L.take 10 [1..5] `shouldBe` [1..5]
 
+    describe "safeHeadList" $ do
+      it "returns empty list for empty list" $ do
+        L.safeHeadList ([] :: [Int]) `shouldBe` ([] :: [Int])
+      it "returns singleton consisting of first element of non-empty list" $ do
+        L.safeHeadList [1..10] `shouldBe` [1]
+
+    describe "safeHead" $ do
+      it "returns None for empty list" $ do
+        L.safeHead [] `shouldBe` (L.None :: L.Maybe Int)
+      it "returns Some of head of non-empty list" $ do
+        L.safeHead [1..10] `shouldBe` L.Some 1
+
     describe "map" $ do
         it "returns an empty list for f []" $ do
             L.map (+1) [] `shouldBe` []
