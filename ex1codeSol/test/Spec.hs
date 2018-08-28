@@ -43,7 +43,7 @@ main = hspec $ do
         it "returns False for other characters" $ do
             map isVowel nonVowels `shouldBe` replicate (length nonVowels) False
 
-    describe "subjects" $ do
+    describe "amountOf" $ do
         it "maps to correct tuples" $ do
             map (amountOf "Haskell") [[], [1], [1,2], [1,2,3]] `shouldBe` zip [None, One, Two, Three] (replicate 4 "Haskell")
 
