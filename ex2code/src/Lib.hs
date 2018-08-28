@@ -7,9 +7,12 @@ module Lib
     , iterate
     , filterPos
     , filterPosMany
+    , Maybe(..)
+    , safeHeadList
+    , safeHead
     ) where
 
-import Prelude hiding (map, take, iterate, sqrt)
+import Prelude hiding (map, take, iterate, sqrt, Maybe)
 
 -- TASK 1
 -- Parametric polymorphism
@@ -28,14 +31,30 @@ f1 = undefined
 f2 :: a -> b -> b
 f2 = undefined
 
--- rewrite the function "takeInt" so that it
--- accepts a list of any type
--- if you used the built in function "take" on the
--- last assignment, write your own implementation of it
--- be sure to include a type signature
--- hint: you probably don't have to change much
-
+-- Rewrite the function "takeInt" from exercice 1 as "take" so
+-- that it accepts a list of any type. If you used the
+-- built-in function "take" on the last assignment, write your
+-- own implementation this time. Be sure to include a type
+-- signature. (Hint: If you already wrote takeInt, you won't
+-- have to change much.)
 take = undefined
+
+-- The function head :: [a] -> a which returns the first
+-- element of a list, is /partial/, meaning it will crash for
+-- some inputs. (Which?) One solution could be to make a
+-- /total/ function "safeHeadList :: [a] -> [a]" which either
+-- gives the head, or nothing. Can you implement it using take?
+safeHeadList :: [a] -> [a]
+safeHeadList = undefined
+
+-- The output of safeHeadList is either empty or a singleton,
+-- and thus using a list as output-type is a bit misleading. A
+-- better choice is Maybe (sometimes called Optional):
+data Maybe a = Some a | None deriving (Eq, Show)
+
+-- Implement 'safeHead', representing failure using None.
+safeHead :: [a] -> Maybe a
+safeHead = undefined
 
 -- TASK 2
 -- Higher order functions
