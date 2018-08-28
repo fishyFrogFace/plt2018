@@ -71,7 +71,7 @@ iterate = undefined
 -- complete the function filterPos
 -- that takes a list and returns 
 -- a filtered list containing only positive
--- integers
+-- integers (including zero)
 -- use partial application to achieve this
 filterPos :: [Int] -> [Int]
 filterPos = undefined
@@ -79,7 +79,7 @@ filterPos = undefined
 -- complete the function filterPosMany
 -- that takes a list of lists and returns
 -- a list of lists with only positive
--- integers
+-- integers (including zero)
 -- hint: use filterPos and map
 filterPosMany :: [[Int]] -> [[Int]]
 filterPosMany = undefined
