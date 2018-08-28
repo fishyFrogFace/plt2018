@@ -7,9 +7,12 @@ module Lib
     , iterate
     , filterPos
     , filterPosMany
+    , Maybe(..)
+    , safeHeadList
+    , safeHead
     ) where
 
-import Prelude hiding (map, take, iterate, sqrt, neg, succ, pred)
+import Prelude hiding (map, take, iterate, sqrt, neg, succ, pred, Maybe)
 
 -- TASK 1
 -- Parametric polymorphism
@@ -51,6 +54,13 @@ takes 0 _      = []
 takes _ []     = []
 takes _ [x]    = [x]
 takes n (x:xs) = x : takes (n-1) xs
+
+data Maybe a = Some a | None deriving (Eq, Show)
+
+safeHeadList = take 1
+
+safeHead [] = None
+safeHead (x:_) = Some x
 
 -- TASK 2
 -- Higher order functions
