@@ -7,8 +7,45 @@ module Lib
     , shunt
     ) where
 
-import Prelude hiding (lex)
+import Prelude hiding (lex, dropWhile, takeWhile, break)
 import Data.Char (isDigit)
+
+
+-- Implement the following functions which respectively
+-- return the elements at the beginning of a list satisfying
+-- the given predicate; or drops them, returning the
+-- remaining elements of the list.
+takeWhile :: (a -> Bool) -> [a] -> [a]
+takeWhile _ [] = []
+takeWhile p (x:xs)
+  | p x       = x : takeWhile p xs
+  | otherwise = []
+
+dropWhile :: (a -> Bool) -> [a] -> [a]
+dropWhile _ [] = []
+dropWhile p l@(x:xs)
+  | p x       = dropWhile p xs
+  | otherwise = l
+
+-- Implement "break" which splits a list into two pieces,
+-- one consisting of elements before a certain predicate is
+-- satisfied, and then the remaining elements (including the
+-- element satisfying the predicate).
+break :: (a -> Bool) -> [a] -> ([a], [a])
+break p l = (start, end)
+  where start = takeWhile (not. p) l
+        end = drop (length start) l
+
+-- Implement "splitOn" which splits a list into non-empty
+-- segments separated by a given character.
+splitOn :: Eq a => a -> [a] -> [[a]]
+splitOn ch lst = let strip = dropWhile (==ch) lst
+                 in case strip of
+                    []     -> []
+                    (x:xs) -> n : (splitOn ch b)
+                                where
+                              (n, b) = break (==ch) strip
+
 
 data Token = TokOp Op
            | TokInt Int
@@ -28,13 +65,6 @@ data Op = Plus
         | Flip
         deriving (Show, Eq)
 
-splitOn :: Eq a => a -> [a] -> [[a]]
-splitOn ch lst = let strip = dropWhile (==ch) lst
-                 in case strip of
-                    []     -> []
-                    (x:xs) -> n : (splitOn ch b)
-                                where
-                              (n, b) = break (==ch) strip
 
 isInt :: String -> Bool
 isInt str

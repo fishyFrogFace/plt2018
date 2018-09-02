@@ -1,6 +1,5 @@
 module Lib
-    ( splitOn
-    , drop
+    ( drop
     , takeWhile
     , dropWhile
     , break
@@ -8,76 +7,66 @@ module Lib
     , Complex(..)
     ) where
 
-import Prelude hiding (takeWhile, dropWhile, break, drop
-                      , foldr, maximum, Foldable(..))
+import Prelude hiding (drop, foldr, maximum, minimum, any, all, length
+                      , concat, sum, elem,  Foldable(..))
 
 -- TASK 1
 -- Bounded parametric polymorphism and folds
 
 -- Implement "drop" (the opposite of take as seen before) but let GHC
 -- infer it's type signature. Check out what GHC infers using ":t"
--- inside GHCi. Is there a problem?  drop (Eq t, Num t) => t -> [a] ->
--- [a] answer: Num t is too general for index; should be Int (or
--- Integer)
-drop :: Int -> [a] -> [a]
+-- inside GHCi. Is there a problem?
+-- > drop (Ord t, Num t) => t -> [a] -> [a]
+-- answer: Num t is too general for index; should be Int (or Integer)
+-- drop :: Int -> [a] -> [a]
 drop _ []     = []
 drop n l@(x:xs)
     | n > 0     = drop (n-1) xs
     | otherwise = l
 
--- Implement the following functions which respectively
--- return the elements at the beginning of a list satisfying
--- the given predicate; or drops them, returning the
--- remaining elements of the list.
-takeWhile :: (a -> Bool) -> [a] -> [a]
-takeWhile _ [] = []
-takeWhile p (x:xs)
-  | p x       = x : takeWhile p xs
-  | otherwise = []
+-- >>> :t drop
+-- drop :: Int -> [a] -> [a]
 
-dropWhile :: (a -> Bool) -> [a] -> [a]
-dropWhile _ [] = []
-dropWhile p l@(x:xs)
-  | p x       = dropWhile p xs
-  | otherwise = l
-
-
--- First, implement "foldr" for lists (as specified by the given type
--- signature) which takes a binary operator and a starting value and
--- recursively applies the binary operator to the head of the list and
--- the fold of the tail:
---   foldr (+) 0 [1,2,3] ~> 1 + (2 + (3 + 0))
---   foldr f z [x1, x2, ..., xn] ~> x1 `f` (x2 `f` ... (xn `f` z))
-listFoldr :: (a -> b -> b) -> b -> [a] -> b
-listFoldr _ acc [] = acc
-listFoldr op acc (x:xs) = op x (listFoldr op acc xs)
-
--- Implement the following as folds.
+-- Implement the following functions that reduce a list to a single
+-- value (or Maybe a single value).
 listSum :: (Num a) => [a] -> a
-listSum = listFoldr (+) 0
+listSum [] = 0
+listSum (x:xs) = x + listSum xs
 
 listProduct :: (Num a) => [a] -> a
-listProduct = listFoldr (*) 1
+listProduct [] = 1
+listProduct (x:xs) = x * listProduct xs
 
 listConcat :: [[a]] -> [a]
-listConcat = listFoldr (++) []
+listConcat [] = []
+listConcat (x:xs) = x ++ listConcat xs
 
 listMaximum :: (Ord a) => [a] -> Maybe a
 listMaximum [] = Nothing
-listMaximum (x:xs) = Just $ listFoldr max x xs
+listMaximum (x:xs) = Just $ listMaximum' x xs
+  where listMaximum' current [] = current
+        listMaximum' current (x:xs)
+          | current < x = listMaximum' x xs
+          | otherwise   = listMaximum' current xs
 
 listMinimum :: (Ord a) => [a] -> Maybe a
 listMinimum [] = Nothing
-listMinimum (x:xs) = Just $ listFoldr min x xs
+listMinimum (x:xs) = Just $ listMinimum' x xs
+  where listMinimum' current [] = current
+        listMinimum' current (x:xs)
+          | current > x = listMinimum' x xs
+          | otherwise   = listMinimum' current xs
 
-
+-- Below our Foldable class is defined. Now define a list instance of
+-- Foldable, and then define the Foldable versions of the functions
+-- you defined previously (and some more).
 class Foldable t where
   foldr :: (a -> b -> b) -> b -> t a -> b
 
 instance Foldable [] where
-  foldr = listFoldr
+  foldr _ acc [] = acc
+  foldr op acc (x:xs) = x `op` foldr op acc xs
 
--- Implement the following, for any Foldable.
 sum :: (Num a, Foldable t) => t a -> a
 sum = foldr (+) 0
 
@@ -104,7 +93,6 @@ safeMinimum = foldr min' Nothing
           | x < y     = Just x
           | otherwise = jy
 
-
 -- The functions "any" and "all" check if any or all elements of a
 -- Foldable satisfy the given predicate.
 any :: Foldable t => (a -> Bool) -> t a -> Bool
@@ -114,58 +102,38 @@ all :: Foldable t => (a -> Bool) -> t a -> Bool
 all p = foldr (\x y -> p x && y) True
 
 
-data Tree a = Leaf a | Branch (Tree a) (Tree a)
+-- TASK 2
+-- Binary Trees
+
+data Tree2 a = Branch (Tree2 a) a (Tree2 a) | Leaf a
   deriving (Eq, Show)
 
 -- Either define each of the following specifically for our Tree
 -- data-structure, or define a Foldable instance (below) and get them
 -- for free. The Foldable instance might prove tricky to define, so
 -- defining the specific functions first may be easier!
-treeSum :: (Num a) => Tree a -> a
+treeSum :: (Num a) => Tree2 a -> a
 treeSum (Leaf a) = a
-treeSum (Branch left right) = treeSum left + treeSum right
+treeSum (Branch left x right) = treeSum left + x + treeSum right
 
-treeConcat :: Tree String -> String
+treeConcat :: Tree2 String -> String
 treeConcat (Leaf s) = s
-treeConcat (Branch left right) = treeConcat left ++ treeConcat right
+treeConcat (Branch left x right) = treeConcat left ++ x ++ treeConcat right
 
 -- Implement treeMaximum and treeMinimum and give them appropriate
 -- type signatures. Do you need to return a Maybe? Why / why not?
-treeMaximum :: (Ord a) => Tree a -> a
+treeMaximum :: (Ord a) => Tree2 a -> a
 treeMaximum (Leaf a) = a
-treeMaximum (Branch left right) = max (treeMaximum left) (treeMaximum right)
-
-treeMinimum :: (Ord a) => Tree a -> a
-treeMinimum (Leaf a) = a
-treeMinimum (Branch left right) = min (treeMinimum left) (treeMinimum right)
+treeMaximum (Branch left x right) = max (max (treeMaximum left) x) (treeMaximum right)
 
 -- Write a Foldable instance for Tree.
-instance Foldable Tree where
+instance Foldable Tree2 where
   foldr op acc (Leaf a) = a `op` acc
-  foldr op acc (Branch left right) =
-    foldr op (foldr op acc right) left
+  foldr op acc (Branch left x right) =
+    foldr op (x `op` foldr op acc right) left
 
 
--- Implement "break" which splits a list into two pieces,
--- one consisting of elements before a certain predicate is
--- satisfied, and then the remaining elements (including the
--- element satisfying the predicate).
-break :: (a -> Bool) -> [a] -> ([a], [a])
-break p l = (start, end)
-  where start = takeWhile (not. p) l
-        end = drop (length start) l
-
--- Implement "splitOn" which splits a list into non-empty
--- segments separated by a given character.
-splitOn :: Eq a => a -> [a] -> [[a]]
-splitOn ch lst = let strip = dropWhile (==ch) lst
-                 in case strip of
-                    []     -> []
-                    (x:xs) -> n : (splitOn ch b)
-                                where
-                                  (n, b) = break (==ch) strip
-
--- TASK 2
+-- TASK 3
 -- Num Complex
  
 data Complex = Complex Double Double deriving (Eq) 
@@ -186,7 +154,7 @@ instance Num Complex where
     fromInteger int = Complex (fromInteger int) 0 
     (-) (Complex r1 i1) (Complex r2 i2) = Complex (r1-r2) (i1-i2) 
 
--- TASK 3
+-- TASK 4
 -- Making your own type classes
 
 type Position = (Double, Double)
