@@ -1,6 +1,5 @@
 module Lib
-    ( splitOn
-    , drop
+    ( drop
     , takeWhile
     , dropWhile
     , break
@@ -17,13 +16,16 @@ import Prelude hiding (drop, foldr, maximum, minimum, any, all, length
 -- Implement "drop" (the opposite of take as seen before) but let GHC
 -- infer it's type signature. Check out what GHC infers using ":t"
 -- inside GHCi. Is there a problem?
--- > drop (Eq t, Num t) => t -> [a] -> [a]
+-- > drop (Ord t, Num t) => t -> [a] -> [a]
 -- answer: Num t is too general for index; should be Int (or Integer)
-drop :: Int -> [a] -> [a]
+-- drop :: Int -> [a] -> [a]
 drop _ []     = []
 drop n l@(x:xs)
     | n > 0     = drop (n-1) xs
     | otherwise = l
+
+-- >>> :t drop
+-- drop :: Int -> [a] -> [a]
 
 -- Implement the following functions that reduce a list to a single
 -- value (or Maybe a single value).
