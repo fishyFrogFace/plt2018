@@ -1,28 +1,63 @@
 module Lib
     ( splitOn
-    , drop'
+    , drop
+    , takeWhile
+    , dropWhile
+    , break
     , Complex(..)
     ) where
+
+import Prelude hiding (takeWhile, dropWhile, break, drop)
 
 -- TASK 1
 -- Bounded parametric polymorphism
 
+-- Implement "drop" (the "opposite" of take, seen before)
+-- but let GHC infer it's type signature. Check out what GHC
+-- infers using ":t" inside GHCi. Is there a problem?
+-- drop (Eq t, Num t) => t -> [a] -> [a]
+-- answer: Num t is too general for index; should be Int (or Integer)
+drop :: Int -> [a] -> [a]
+drop _ []     = []
+drop n l@(x:xs)
+    | n > 0     = drop (n-1) xs
+    | otherwise = l
+
+-- Implement the following functions which respectively
+-- return the elements at the beginning of a list satisfying
+-- the given predicate; or drops them, returning the
+-- remaining elements of the list.
+takeWhile :: (a -> Bool) -> [a] -> [a]
+takeWhile _ [] = []
+takeWhile p (x:xs)
+  | p x       = x : takeWhile p xs
+  | otherwise = []
+
+dropWhile :: (a -> Bool) -> [a] -> [a]
+dropWhile _ [] = []
+dropWhile p l@(x:xs)
+  | p x       = dropWhile p xs
+  | otherwise = l
+
+-- Implement "break" which splits a list into two pieces,
+-- one consisting of elements before a certain predicate is
+-- satisfied, and then the remaining elements (including the
+-- element satisfying the predicate).
+break :: (a -> Bool) -> [a] -> ([a], [a])
+break p l = (start, end)
+  where start = takeWhile (not. p) l
+        end = drop (length start) l
+
+-- Implement "splitOn" which splits a list into non-empty
+-- segments separated by a given character.
 splitOn :: Eq a => a -> [a] -> [[a]]
 splitOn ch lst = let strip = dropWhile (==ch) lst
                  in case strip of
                     []     -> []
                     (x:xs) -> n : (splitOn ch b)
                                 where
-                              (n, b) = break (==ch) strip
+                                  (n, b) = break (==ch) strip
 
---what happens if we let the compiler decide the type signature?
---drop' (Eq t, Num t) => t -> [a] -> [a]
---why is this bad?
-drop' :: Int -> [a] -> [a]
-drop' _ []     = []
-drop' n (x:xs)
-    | n > 0     = drop' (n-1) xs
-    | otherwise = (x:xs)
 
 -- TASK 2
 -- Num Complex
