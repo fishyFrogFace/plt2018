@@ -4,19 +4,21 @@ module Lib
     , takeWhile
     , dropWhile
     , break
+    , foldr
     , Complex(..)
     ) where
 
-import Prelude hiding (takeWhile, dropWhile, break, drop)
+import Prelude hiding (takeWhile, dropWhile, break, drop
+                      , foldr, maximum, Foldable(..))
 
 -- TASK 1
--- Bounded parametric polymorphism
+-- Bounded parametric polymorphism and folds
 
--- Implement "drop" (the "opposite" of take, seen before)
--- but let GHC infer it's type signature. Check out what GHC
--- infers using ":t" inside GHCi. Is there a problem?
--- drop (Eq t, Num t) => t -> [a] -> [a]
--- answer: Num t is too general for index; should be Int (or Integer)
+-- Implement "drop" (the opposite of take as seen before) but let GHC
+-- infer it's type signature. Check out what GHC infers using ":t"
+-- inside GHCi. Is there a problem?  drop (Eq t, Num t) => t -> [a] ->
+-- [a] answer: Num t is too general for index; should be Int (or
+-- Integer)
 drop :: Int -> [a] -> [a]
 drop _ []     = []
 drop n l@(x:xs)
@@ -39,6 +41,111 @@ dropWhile p l@(x:xs)
   | p x       = dropWhile p xs
   | otherwise = l
 
+
+-- First, implement "foldr" for lists (as specified by the given type
+-- signature) which takes a binary operator and a starting value and
+-- recursively applies the binary operator to the head of the list and
+-- the fold of the tail:
+--   foldr (+) 0 [1,2,3] ~> 1 + (2 + (3 + 0))
+--   foldr f z [x1, x2, ..., xn] ~> x1 `f` (x2 `f` ... (xn `f` z))
+listFoldr :: (a -> b -> b) -> b -> [a] -> b
+listFoldr _ acc [] = acc
+listFoldr op acc (x:xs) = op x (listFoldr op acc xs)
+
+-- Implement the following as folds.
+listSum :: (Num a) => [a] -> a
+listSum = listFoldr (+) 0
+
+listProduct :: (Num a) => [a] -> a
+listProduct = listFoldr (*) 1
+
+listConcat :: [[a]] -> [a]
+listConcat = listFoldr (++) []
+
+listMaximum :: (Ord a) => [a] -> Maybe a
+listMaximum [] = Nothing
+listMaximum (x:xs) = Just $ listFoldr max x xs
+
+listMinimum :: (Ord a) => [a] -> Maybe a
+listMinimum [] = Nothing
+listMinimum (x:xs) = Just $ listFoldr min x xs
+
+
+class Foldable t where
+  foldr :: (a -> b -> b) -> b -> t a -> b
+
+instance Foldable [] where
+  foldr = listFoldr
+
+-- Implement the following, for any Foldable.
+sum :: (Num a, Foldable t) => t a -> a
+sum = foldr (+) 0
+
+concat :: Foldable t => t [a] -> [a]
+concat = foldr (++) []
+
+length :: Foldable t => t a -> Int
+length = foldr (\_ acc -> acc + 1) 0 
+
+elem :: (Eq a, Foldable t) => a -> t a -> Bool
+x `elem ` ys = foldr (\y b -> b || y == x) False ys
+
+safeMaximum :: (Foldable t, Ord a) => t a -> Maybe a
+safeMaximum = foldr max' Nothing
+  where max' x Nothing = Just x
+        max' x jy@(Just y)
+          | x > y     = Just x
+          | otherwise = jy
+
+safeMinimum :: (Foldable t, Ord a) => t a -> Maybe a
+safeMinimum = foldr min' Nothing
+  where min' x Nothing = Just x
+        min' x jy@(Just y)
+          | x < y     = Just x
+          | otherwise = jy
+
+
+-- The functions "any" and "all" check if any or all elements of a
+-- Foldable satisfy the given predicate.
+any :: Foldable t => (a -> Bool) -> t a -> Bool
+any p = foldr (\x y -> p x || y) False
+
+all :: Foldable t => (a -> Bool) -> t a -> Bool
+all p = foldr (\x y -> p x && y) True
+
+
+data Tree a = Leaf a | Branch (Tree a) (Tree a)
+  deriving (Eq, Show)
+
+-- Either define each of the following specifically for our Tree
+-- data-structure, or define a Foldable instance (below) and get them
+-- for free. The Foldable instance might prove tricky to define, so
+-- defining the specific functions first may be easier!
+treeSum :: (Num a) => Tree a -> a
+treeSum (Leaf a) = a
+treeSum (Branch left right) = treeSum left + treeSum right
+
+treeConcat :: Tree String -> String
+treeConcat (Leaf s) = s
+treeConcat (Branch left right) = treeConcat left ++ treeConcat right
+
+-- Implement treeMaximum and treeMinimum and give them appropriate
+-- type signatures. Do you need to return a Maybe? Why / why not?
+treeMaximum :: (Ord a) => Tree a -> a
+treeMaximum (Leaf a) = a
+treeMaximum (Branch left right) = max (treeMaximum left) (treeMaximum right)
+
+treeMinimum :: (Ord a) => Tree a -> a
+treeMinimum (Leaf a) = a
+treeMinimum (Branch left right) = min (treeMinimum left) (treeMinimum right)
+
+-- Write a Foldable instance for Tree.
+instance Foldable Tree where
+  foldr op acc (Leaf a) = a `op` acc
+  foldr op acc (Branch left right) =
+    foldr op (foldr op acc right) left
+
+
 -- Implement "break" which splits a list into two pieces,
 -- one consisting of elements before a certain predicate is
 -- satisfied, and then the remaining elements (including the
@@ -57,7 +164,6 @@ splitOn ch lst = let strip = dropWhile (==ch) lst
                     (x:xs) -> n : (splitOn ch b)
                                 where
                                   (n, b) = break (==ch) strip
-
 
 -- TASK 2
 -- Num Complex
