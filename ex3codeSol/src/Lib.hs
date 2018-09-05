@@ -39,6 +39,9 @@ listMinimum (x:xs) = Just $ listMinimum' x xs
           | current >= x = listMinimum' x xs
           | otherwise    = listMinimum' current xs
 
+-- TASK 3 Folds
+
+-- TASK 3.1
 -- Below our Foldable class is defined. Now define a list instance of
 -- Foldable, and then define the Foldable versions of the functions
 -- you defined previously (and some more).
@@ -83,7 +86,7 @@ any p = foldr (\x y -> p x || y) False
 all :: Foldable t => (a -> Bool) -> t a -> Bool
 all p = foldr (\x y -> p x && y) True
 
--- TASK 3
+-- TASK 3.2
 -- Binary Trees
 
 data Tree a = Branch (Tree a) a (Tree a) | Leaf a
