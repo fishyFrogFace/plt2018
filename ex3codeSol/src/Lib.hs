@@ -1,31 +1,13 @@
 module Lib
-    ( drop
-    , takeWhile
-    , dropWhile
-    , break
-    , foldr
+    ( foldr
     , Complex(..)
     ) where
 
-import Prelude hiding (drop, foldr, maximum, minimum, any, all, length
-                      , concat, sum, elem,  Foldable(..))
+import Prelude hiding (foldr, maximum, minimum, any, all, length
+                      , concat, sum, product, elem, Foldable(..))
 
--- TASK 1
--- Bounded parametric polymorphism and folds
-
--- Implement "drop" (the opposite of take as seen before) but let GHC
--- infer it's type signature. Check out what GHC infers using ":t"
--- inside GHCi. Is there a problem?
--- > drop (Ord t, Num t) => t -> [a] -> [a]
--- answer: Num t is too general for index; should be Int (or Integer)
--- drop :: Int -> [a] -> [a]
-drop _ []     = []
-drop n l@(x:xs)
-    | n > 0     = drop (n-1) xs
-    | otherwise = l
-
--- >>> :t drop
--- drop :: Int -> [a] -> [a]
+-- TASK 2
+-- Bounded parametric polymorphism
 
 -- Implement the following functions that reduce a list to a single
 -- value (or Maybe a single value).
@@ -46,16 +28,16 @@ listMaximum [] = Nothing
 listMaximum (x:xs) = Just $ listMaximum' x xs
   where listMaximum' current [] = current
         listMaximum' current (x:xs)
-          | current < x = listMaximum' x xs
-          | otherwise   = listMaximum' current xs
+          | current <= x = listMaximum' x xs
+          | otherwise    = listMaximum' current xs
 
 listMinimum :: (Ord a) => [a] -> Maybe a
 listMinimum [] = Nothing
 listMinimum (x:xs) = Just $ listMinimum' x xs
   where listMinimum' current [] = current
         listMinimum' current (x:xs)
-          | current > x = listMinimum' x xs
-          | otherwise   = listMinimum' current xs
+          | current >= x = listMinimum' x xs
+          | otherwise    = listMinimum' current xs
 
 -- Below our Foldable class is defined. Now define a list instance of
 -- Foldable, and then define the Foldable versions of the functions
@@ -83,15 +65,15 @@ safeMaximum :: (Foldable t, Ord a) => t a -> Maybe a
 safeMaximum = foldr max' Nothing
   where max' x Nothing = Just x
         max' x jy@(Just y)
-          | x > y     = Just x
-          | otherwise = jy
+          | x >= y     = Just x
+          | otherwise  = jy
 
 safeMinimum :: (Foldable t, Ord a) => t a -> Maybe a
 safeMinimum = foldr min' Nothing
   where min' x Nothing = Just x
         min' x jy@(Just y)
-          | x < y     = Just x
-          | otherwise = jy
+          | x <= y     = Just x
+          | otherwise  = jy
 
 -- The functions "any" and "all" check if any or all elements of a
 -- Foldable satisfy the given predicate.
@@ -101,39 +83,37 @@ any p = foldr (\x y -> p x || y) False
 all :: Foldable t => (a -> Bool) -> t a -> Bool
 all p = foldr (\x y -> p x && y) True
 
-
--- TASK 2
+-- TASK 3
 -- Binary Trees
 
-data Tree2 a = Branch (Tree2 a) a (Tree2 a) | Leaf a
+data Tree a = Branch (Tree a) a (Tree a) | Leaf a
   deriving (Eq, Show)
 
 -- Either define each of the following specifically for our Tree
 -- data-structure, or define a Foldable instance (below) and get them
 -- for free. The Foldable instance might prove tricky to define, so
 -- defining the specific functions first may be easier!
-treeSum :: (Num a) => Tree2 a -> a
+treeSum :: (Num a) => Tree a -> a
 treeSum (Leaf a) = a
 treeSum (Branch left x right) = treeSum left + x + treeSum right
 
-treeConcat :: Tree2 String -> String
+treeConcat :: Tree String -> String
 treeConcat (Leaf s) = s
 treeConcat (Branch left x right) = treeConcat left ++ x ++ treeConcat right
 
 -- Implement treeMaximum and treeMinimum and give them appropriate
 -- type signatures. Do you need to return a Maybe? Why / why not?
-treeMaximum :: (Ord a) => Tree2 a -> a
+treeMaximum :: (Ord a) => Tree a -> a
 treeMaximum (Leaf a) = a
 treeMaximum (Branch left x right) = max (max (treeMaximum left) x) (treeMaximum right)
 
 -- Write a Foldable instance for Tree.
-instance Foldable Tree2 where
+instance Foldable Tree where
   foldr op acc (Leaf a) = a `op` acc
   foldr op acc (Branch left x right) =
     foldr op (x `op` foldr op acc right) left
 
-
--- TASK 3
+-- TASK 4
 -- Num Complex
  
 data Complex = Complex Double Double deriving (Eq) 
@@ -154,7 +134,7 @@ instance Num Complex where
     fromInteger int = Complex (fromInteger int) 0 
     (-) (Complex r1 i1) (Complex r2 i2) = Complex (r1-r2) (i1-i2) 
 
--- TASK 4
+-- TASK 5
 -- Making your own type classes
 
 type Position = (Double, Double)
