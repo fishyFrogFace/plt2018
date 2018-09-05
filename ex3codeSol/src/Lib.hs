@@ -86,36 +86,6 @@ any p = foldr (\x y -> p x || y) False
 all :: Foldable t => (a -> Bool) -> t a -> Bool
 all p = foldr (\x y -> p x && y) True
 
--- TASK 3.2
--- Binary Trees
-
-data Tree a = Branch (Tree a) a (Tree a) | Leaf a
-  deriving (Eq, Show)
-
--- Either define each of the following specifically for our Tree
--- data-structure, or define a Foldable instance (below) and get them
--- for free. The Foldable instance might prove tricky to define, so
--- defining the specific functions first may be easier!
-treeSum :: (Num a) => Tree a -> a
-treeSum (Leaf a) = a
-treeSum (Branch left x right) = treeSum left + x + treeSum right
-
-treeConcat :: Tree String -> String
-treeConcat (Leaf s) = s
-treeConcat (Branch left x right) = treeConcat left ++ x ++ treeConcat right
-
--- Implement treeMaximum and treeMinimum and give them appropriate
--- type signatures. Do you need to return a Maybe? Why / why not?
-treeMaximum :: (Ord a) => Tree a -> a
-treeMaximum (Leaf a) = a
-treeMaximum (Branch left x right) = max (max (treeMaximum left) x) (treeMaximum right)
-
--- Write a Foldable instance for Tree.
-instance Foldable Tree where
-  foldr op acc (Leaf a) = a `op` acc
-  foldr op acc (Branch left x right) =
-    foldr op (x `op` foldr op acc right) left
-
 -- TASK 4
 -- Num Complex
  
@@ -145,10 +115,6 @@ type Position = (Double, Double)
 class Pos a where
     pos :: a -> Position
 
-class (Pos a) => Move a where
-    relocate :: a -> Position -> a
-    belongs :: a -> Position
-
 data Campus = Kalvskinnet
             | Gløshaugen
             | Tyholt
@@ -162,6 +128,10 @@ instance Pos Campus where
     pos Tyholt      = (63.423, 10.435)
     pos Moholt      = (63.413, 10.434)
     pos Dragvoll    = (63.409, 10.471)
+
+class (Pos a) => Move a where
+    relocate :: a -> Position -> a
+    belongs :: a -> Position
 
 data Car = Car { brand :: String
                , regnr :: String
@@ -182,6 +152,9 @@ instance Move Car where
 data Key = Key { keynr :: Int
                , located :: Position
                , cabinet :: Position } deriving (Show)
+
+instance Eq Key where
+    (==) key1 key2 = keynr key1 == keynr key2
 
 instance Pos Key where
     pos = located

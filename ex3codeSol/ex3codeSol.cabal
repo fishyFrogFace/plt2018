@@ -1,8 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.20.0.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9f1f9bf589cf9ebf68ae653e65b94bdc86888987b608537187bd97aba4a7ad5b
+-- hash: 71c8500790b584a683c80afe69aa2bf432a4489592dd13b018da3edafeeff5b7
 
 name:           ex3codeSol
 version:        0.1.0.0
@@ -16,6 +16,7 @@ library
       base >=4.7 && <5
   exposed-modules:
       Lib
+      Tree
   other-modules:
       Paths_ex3codeSol
   default-language: Haskell2010
