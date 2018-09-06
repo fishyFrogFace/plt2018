@@ -148,7 +148,7 @@ foldr (+) 0 (Branch (Leaf 1) 2 (Leaf 3))
 ==> 1 + (2 + foldr (+) 0 (Leaf 3))
 ==> 1 + (2 + (3 + 0)) ...
 \end{lstlisting}
-The skeleton for this task can be found in src/Tree.hs. Make the tree an instance of \textbf{Foldable}. Writing the three predefined functions might help you reason about this task, but is not mandatory.
+The skeleton for this task can be found in src/Tree.hs. Make the tree an instance of \textbf{Foldable}. Writing the three predefined functions might help you reason about this task, but they are not mandatory.
 
 \section{The Num type class}
 \subsection{Num Complex}
@@ -189,14 +189,39 @@ Implement either negate (unary minus), which returns the negation of the number 
 
 \section{Making your own type classes}
 
+\subsection{Record syntax}
+Using record syntax, we can create types with named fields.
+\begin{lstlisting}
+--record syntax
+data Person = Person { firstName :: String
+                     , lastName :: String
+                     , socialSecNr :: Int
+                     , zipCode :: Int
+                     } deriving (Eq, Show)
+\end{lstlisting}
+Above, we have defined a type \textbf{Person}, using record syntax. The fields are easy to access.
+\begin{lstlisting}
+Prelude> let person1 = Person {firstName = "Jane", lastName = "Doe", socialSecNr = 1234567890, zipCode = 7034}
+Prelude> firstName person1
+"Jane"
+\end{lstlisting}
+The person type defined above, is a derived instance of Show and Eq. (==) will then result in a comparison of every field and False if they are not all equal. This is unfortunate, since Jane might move or change her name. To amend this, we write our own instance of Eq.
+\begin{lstlisting}
+instance Eq Person where
+    (==) p1 p2 = socialSecNr p1 == socialSecNr p2
+--now Jane can move all she wants and still be the same person
+Prelude> let samePers = person1 {zipCode = 7042}
+Prelude> samePers == person1
+True
+\end{lstlisting}
 \subsection{Move type class}
 Create a type class Move that is a subclass of Pos. A movable type should be able to be moved and has a position where it belongs.
 
 \subsection{Car}
-Create a record type \textbf{Car} and make it an instance of Eq, Pos and Move.
+Create a type \textbf{Car}, using record syntax, and make it an instance of Eq, Pos and Move.
 
 \subsection{Key}
-Create a type \textbf{Key} and make it an instance of Eq, Pos and Move.
+Create a type \textbf{Key}, using record syntax, and make it an instance of Eq, Pos and Move.
 
 \subsection{free}
 Implement a function \textbf{free :: Move a $\Rightarrow$ a $\rightarrow$ Bool} that checks if an object is at the place it belongs.
@@ -210,11 +235,11 @@ Implement a function \textbf{distanceBetween :: Pos a $\Rightarrow$ a $\rightarr
 \section{Theory questions}
 \begin{itemize}
     \item When implementing \textbf{treeMaximum} in src/Tree.hs, do you have to return a Maybe? Why or why not?
-    \item After making \textbf{Tree a} an instance of \textbf{Foldable}, we can sum it by calling \textbf{sum sum \$ Branch (Leaf 56) 2 (Leaf 23)} (:l src/Tree.hs and try it out!). This also applies to \textbf{maximum} and several other functions. How do we get these functions "for free"?
+    \item After making \textbf{Tree a} an instance of \textbf{Foldable}, we can sum it by calling \textbf{sum \$ Branch (Leaf 56) 2 (Leaf 23)} (:l src/Tree.hs and try it out!). This also applies to \textbf{maximum} and several other functions. How do we get these functions "for free"?
     \item Can we make Complex an instance of Ord? The minimal complete definition of Ord is \textbf{compare | ($<$=)}, meaning that you have to implement either compare or ($<$=). Use Hoogle to inspect these functions in more detail, if needed. Provide the reasoning behind your answer.
     \item Load your file and write \textbf{negate (Complex 3 4)}, if you implemented (-) in 2.7. If you implemented negate, type \textbf{(Complex 3 4) - (Complex 2 7)}. What happens? Why does this happen?
     \item Try to make a Pos instance of the type synonym Position. What kind of error message do you get? From the error message, do you think it's possible to achieve this?
-    \item You probably used record syntax when creating your types, and you might have run into issues if you tried to name fields identically. If not, try to run the following code:
+    \item You used record syntax when creating your types, and you might have run into issues if you tried to name fields identically. If not, try to run the following code:
     \lstset{language=Haskell}
     \begin{lstlisting}
 data Employee = Employee { name :: String
