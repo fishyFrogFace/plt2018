@@ -116,7 +116,6 @@ instance Show Complex where
         | i >= 0 = show r ++ "+" ++ show i ++ "i" 
         | otherwise = show r ++ "-" ++ show (abs i) ++ "i" 
 
--- (+), (*), abs, signum, fromInteger, ((-)|negate) 
 instance Num Complex where 
     (+) (Complex r1 i1) (Complex r2 i2) = Complex (r1+r2) (i1+i2) 
     (*) (Complex r1 i1) (Complex r2 i2) = Complex (r1*r2 - i1*i2) (r1*i2 + i1*r2) 
