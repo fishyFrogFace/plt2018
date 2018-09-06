@@ -108,6 +108,17 @@ main = hspec $ do
         it "returns True for empty list" $ do
             L.all (==True) [] `shouldBe` True
 
+    describe "Num Complex is implemented" $ do
+        it "adds, multiplies and subtracts Complex numbers" $ do
+            (L.Complex 3 4) - (L.Complex 2 7) + (L.Complex 7 5) * (L.Complex 1 2)
+              `shouldBe` (L.Complex (-2) 16)
+        it "computes the sign of a Complex number" $ do
+            signum (L.Complex 3 4) `shouldBe` (L.Complex 0.6 0.8)
+        it "computes the absolute value of a Complex number" $ do
+            abs (L.Complex 3 4) `shouldBe` (L.Complex 5 0)
+        it "converts integers to complex numbers" $ do
+            fromInteger 27 `shouldBe` (L.Complex 27 0)
+
     describe "foldable instance of Tree" $ do
         it "can be summed" $ do
             sum tree `shouldBe` (27 :: Int)
