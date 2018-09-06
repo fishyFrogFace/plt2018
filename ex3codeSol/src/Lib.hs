@@ -1,6 +1,20 @@
 module Lib
-    ( foldr
+    ( listSum
+    , listProduct
+    , listConcat
+    , listMaximum
+    , listMinimum
+    , sum
+    , concat
+    , length
+    , elem
+    , safeMaximum
+    , safeMinimum
+    , any
+    , all
+    , foldr
     , Complex(..)
+    , free
     ) where
 
 import Prelude hiding (foldr, maximum, minimum, any, all, length
@@ -52,6 +66,9 @@ instance Foldable [] where
   foldr _ acc [] = acc
   foldr op acc (x:xs) = x `op` foldr op acc xs
 
+--
+-- USE FOLDR TO DEFINE THESE FUNCTIONS
+--
 sum :: (Num a, Foldable t) => t a -> a
 sum = foldr (+) 0
 
@@ -80,6 +97,9 @@ safeMinimum = foldr min' Nothing
 
 -- The functions "any" and "all" check if any or all elements of a
 -- Foldable satisfy the given predicate.
+--
+-- USE FOLDR
+--
 any :: Foldable t => (a -> Bool) -> t a -> Bool
 any p = foldr (\x y -> p x || y) False
 

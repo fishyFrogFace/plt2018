@@ -1,8 +1,6 @@
 module Tree
     (Tree(..)
-    , treeSum
-    , treeConcat
-    , treeMaximum) where
+    ) where
 
 -- TASK 3.2
 -- Binary Trees
