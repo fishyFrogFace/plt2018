@@ -14,7 +14,6 @@ module Lib
     , all
     , foldr
     , Complex(..)
-    , free
     ) where
 
 import Prelude hiding (foldr, maximum, minimum, any, all, length
