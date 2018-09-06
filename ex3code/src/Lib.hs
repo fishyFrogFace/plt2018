@@ -24,6 +24,10 @@ import Prelude hiding (foldr, maximum, minimum, any, all, length
 
 -- Implement the following functions that reduce a list to a single
 -- value (or Maybe a single value).
+
+-- Maybe is imported from Prelude and is defined like this:
+-- data Maybe a = Just a | Nothing
+
 listSum :: (Num a) => [a] -> a
 listSum = undefined
 

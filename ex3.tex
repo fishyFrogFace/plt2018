@@ -81,21 +81,21 @@ class Eq a where
   x == y = not (x /= y)
   x /= y = not (x == y)
 \end{lstlisting}
-The last two lines give default implementations of equality (\textbf{==}) in terms of inequality (\textbf{/=}), and vice versa. This means a \emph{minimal complete definition} of \textbf{Eq} requires only one of them. For primitive types such as Int, the \textbf{Eq} instance is has a low-level implementation. However, for types we have declared ourselves, we may need to implement the instance ourselves. Consider the type constructor \textbf{Maybe} defined in exercise 2. We would like \textbf{Maybe a} to inherit equality from \textbf{a}, meaning that \textbf{Some x} equals \textbf{Some y} if and only if \textbf{x} equals \textbf{y}:
+The last two lines give default implementations of equality (\textbf{==}) in terms of inequality (\textbf{/=}), and vice versa. This means a \emph{minimal complete definition} of \textbf{Eq} requires only one of them. For primitive types such as Int, the \textbf{Eq} instance is has a low-level implementation. However, for types we have declared ourselves, we may need to implement the instance ourselves. Consider the type constructor \textbf{Maybe} defined in exercise 2. We would like \textbf{Maybe a} to inherit equality from \textbf{a}, meaning that \textbf{Just x} equals \textbf{Just y} if and only if \textbf{x} equals \textbf{y}:
 \begin{lstlisting}
-data Maybe a = Some a | None
+data Maybe a = Just a | Nothing
 
 instance Eq a => Eq (Maybe a) where
-    None == None         = True
-    (Some x) == (Some y) = x == y
+    Nothing == Nothing   = True
+    (Just x) == (Just y) = x == y
     _ == _               = False
 \end{lstlisting}
 The case of inheriting a type class is very common, and there is a shorthand to avoid writing out the instance explicitly, namely by \emph{deriving}:
 \begin{lstlisting}
-data Maybe a = Some a | None deriving Eq
+data Maybe a = Just a | Nothing deriving Eq
 \end{lstlisting}
 
-\subsection{}
+\subsection{List functions}
 Implement the functions \textbf{listSum}, \textbf{listProduct}, \textbf{listConcat}, \textbf{listMaximum} and \textbf{listMinimum}, that sums a list, takes the product of a list, concats a list of lists, finds the largest and smallest element in a list, respectively. \textbf{Use pattern matching on list and recursion.} Some useful pattern matching syntax:
 \begin{lstlisting}
 -- [] matches an empty list
