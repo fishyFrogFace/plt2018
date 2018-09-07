@@ -13,7 +13,7 @@ module Lib
     , safeHead
     ) where
 
-import Prelude hiding (map, take, iterate, Maybe)
+import Prelude hiding (map, take, sqrt, succ, pred, iterate, Maybe)
 
 -- TASK 1
 -- Parametric polymorphism
