@@ -13,7 +13,7 @@ module Lib
     , safeHead
     ) where
 
-import Prelude hiding (map, take, iterate, sqrt, neg, succ, pred, Maybe)
+import Prelude hiding (map, take, iterate, Maybe)
 
 -- TASK 1
 -- Parametric polymorphism
@@ -47,14 +47,11 @@ pred x = x-1
 
 --same as ex1, just change [Int] to [a]
 take :: Int -> [a] -> [a]
-take n lst
+take n [] = []
+take n (x:xs)
     | n <= 0    = []
-    | otherwise = takes n lst
+    | otherwise = x : take (n-1) xs
 
-takes 0 _      = []
-takes _ []     = []
-takes _ [x]    = [x]
-takes n (x:xs) = x : takes (n-1) xs
 
 data Maybe a = Some a | None deriving (Eq, Show)
 
