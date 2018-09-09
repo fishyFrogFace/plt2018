@@ -16,7 +16,7 @@ module Lib
     ) where
 
 import Control.Monad (mapM_)
-import Prelude hiding (take)
+import Prelude hiding (take, length)
 
 -- TASK 1
 -- Simple functions
