@@ -109,11 +109,12 @@ all p = foldr (\x y -> p x && y) True
 -- Num Complex
  
 data Complex = Complex Double Double deriving (Eq) 
- 
+
+showSign :: Double -> String
+showSign n = if n >= 0 then "+" else "-"
+
 instance Show Complex where 
-    show (Complex r i) 
-        | i >= 0 = show r ++ "+" ++ show i ++ "i" 
-        | otherwise = show r ++ "-" ++ show (abs i) ++ "i" 
+    show (Complex r i) = show r ++ showSign i ++ show (abs i) 
 
 instance Num Complex where 
     (+) (Complex r1 i1) (Complex r2 i2) = Complex (r1+r2) (i1+i2) 
