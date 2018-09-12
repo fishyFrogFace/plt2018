@@ -2,12 +2,10 @@ module Main where
 
 import Lib
 import Control.Monad
+import System.Environment
 
-parse :: String -> [Token]
-parse = interpret . tokenize . Lib.lex
+parseInfix :: String -> [Token]
+parseInfix = interpret . shunt . tokenize . Lib.lex
 
 main :: IO ()
-main = forever $ getLine >>= print . parse
-
-mainInfix :: IO ()
-mainInfix = undefined
+main = forever $ getLine >>= print . parseInfix
