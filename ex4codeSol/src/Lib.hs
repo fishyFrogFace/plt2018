@@ -1,6 +1,10 @@
 module Lib
     ( Token(..)
     , Op(..)
+    , takeWhile
+    , dropWhile
+    , break
+    , splitOn
     , lex
     , tokenize
     , interpret
