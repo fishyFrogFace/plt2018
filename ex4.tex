@@ -1,0 +1,119 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Haskell,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=fixed,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3,
+  numbers=left,
+  stepnumber=1
+}
+
+\title{Exercise 4}
+\author{NTNU}
+\date{TDT4165 fall 2018}
+
+\begin{document}
+
+\maketitle
+
+\section{RPN calculator}
+
+\subsection{splitOn}
+\paragraph{takeWhile, dropWhile}
+Implement the functions \textbf{takeWhile, dropWhile :: (a $\rightarrow$ Bool) $\rightarrow$ [a] $\rightarrow$ [a]}, which takes a predicate and a list and returns the elements of the list or drops them as long as the predicate is satisfied, respectively.
+
+\paragraph{break}
+Implement the function \textbf{break :: (a $\rightarrow$ Bool) $\rightarrow$ [a] $\rightarrow$ ([a], [a])} which takes a predicate and a list. It splits the list on the first occurrence where the predicate is satisfied and returns a tuple with the two parts.
+
+\paragraph{splitOn}
+Implement the function \textbf{splitOn :: Eq a $\Rightarrow$ a $\rightarrow$ [a] $\rightarrow$ [[a]]} that splits a list on a given element and returns a list of lists. It should remove duplicates of the element you split on. Using dropWhile, takeWhile and/or break, might help you get to the finish line on this one.
+\begin{lstlisting}
+--example
+Prelude> splitOn '.' [....lambda...the..ultimate...]
+["lambda", "the", "ultimate"]
+\end{lstlisting}
+
+\subsection{Lexer}
+Implement the function \textbf{lex :: String $\rightarrow$ [String]} which splits a list on the space character.
+\textbf{lex " Don't   panic  ! "} should return \textbf{["Don't", "panic", "!"]}
+
+\subsection{Tokenizer}
+Implement the function \textbf{tokenize :: [String] -$>$ [Token]} which takes a list of strings and turns them into tokens. It might be helpful to create a helper function which tokenizes one element, \textbf{String -$>$ Token} and then map over it in the tokenize function. Remember to account for the token type TokErr. TokErr circumvents the type system in a similar way to that of null. The compiler will not let you know if you forget to check for it, but the test cases will. The tokenizer should return [TokErr] if any of the tokens are erroneous.
+
+\subsection{Interpreter}
+Implement a function \textbf{interpret :: [Token] $\rightarrow$ [Token]} that takes a list of tokens and interprets them. \textbf{interpret . tokenize . lex \$ "3 10 9 * - 3 +"} should return [TokInt -84]\\
+Hint: foldl could be a useful function for this task
+
+\subsection{Add operators}
+Add token types for \textbf{\#} and \textbf{--} which duplicates an element and takes the additive inverse of a number.
+\begin{lstlisting}
+--example
+*Lib> interpret . tokenize . lex $ "3 # +"
+[TokInt 6]
+*Lib> interpret . tokenize . lex $ "2 -- # +"
+[TokInt (-4)]
+\end{lstlisting}
+
+\section{Shunting-Yard algorithm}
+Since humans are (usually) most proficient in infix notation, it would be useful if we could use this with our calculator. We will therefore be using the Shunting-Yard algorithm to convert infix to postfix notation.
+
+\subsection{Order of operations}
+Implement a function that checks if one operator has a higher precedence than another.
+
+\subsection{shuntInternal}
+Implement the function \textbf{shuntInternal :: [Token] $\rightarrow$ [Token] $\rightarrow$ [Token] $\rightarrow$ [Token]}. It takes three lists, where one is the input stack, the second is the output stack and the third is the operator stack. It will be called recursively and follow these rules when inspecting the head of the input stack:
+\begin{itemize}
+    \item If the input stack is empty, return the output stack in the correct order
+    \item If the element is a number, push it on top of the output stack
+    \item If the element is an operator, check if it has a lower precedence than the top operator on the operator stack. If it does, push the operator with higher precedence on the output stack. Then repeat this step. If not, push the operator on the operator stack.
+\end{itemize}
+
+\subsection{shunt}
+Implement the function \textbf{shunt :: [Token] $\rightarrow$ [Token]} which calls shunt with the appropriate arguments.
+
+\section{Try it out}
+To try out (and demonstrate) your infix calculator, you can use the main function in app/Main.hs. It will be loaded when using \textbf{stack ghci}.
+
+\section{Theory}
+\begin{itemize}
+    \item Formally describe the regular grammar of the lexemes in task 2.
+    \item Describe the grammar of the infix notation in task 3 using (E)BNF. Beware of operator precedence. Is
+the grammar ambiguous? Explain why it is or is not ambiguous?
+    \item What is the difference between a context-sensitive and a context-free grammar?
+    \item Given the grammar below, determine which of the strings are legal in the language:\\
+    \begin{lstlisting}
+    <S> ::= <Z> | <X>
+    <Z> ::= z <Z> y | z <Y> y | e
+    <Y> ::= z <Y> y x | e
+    <X> ::= x <X> x | e
+    \end{lstlisting}
+a) zzyy\\
+b) xxzyxxx\\
+c) xxxx\\
+d) zzyxyx\\
+e) zzzyxyxy\\
+f ) zzyxy\\
+g) zxxy\\
+    
+\end{itemize}
+
+\end{document}
