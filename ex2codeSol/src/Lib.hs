@@ -52,7 +52,6 @@ take n (x:xs)
     | n <= 0    = []
     | otherwise = x : take (n-1) xs
 
-
 data Maybe a = Some a | None deriving (Eq, Show)
 
 safeHeadList = take 1
