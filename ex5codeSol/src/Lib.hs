@@ -36,9 +36,7 @@ data Op = Plus
         deriving (Show, Eq)
 
 isInt :: String -> Bool
-isInt str
-    | filter (==False) (map isDigit str) == [] = True
-    | otherwise                                = False
+isInt str = all isDigit str
 
 lex :: String -> [String]
 lex lst = splitOn ' ' lst
@@ -55,13 +53,13 @@ opToTokOp _    = Nothing
 token :: String -> Maybe Token
 token lst
     | isInt lst = Just $ TokInt (read lst)
-    | otherwise = case (opToTokOp lst) of
+    | otherwise = case opToTokOp lst of
                       Just x -> Just (TokOp x)
                       _      -> Nothing
 
 tokenize :: [String] -> Maybe [Token]
 tokenize lst = let tokens = map token lst
-                in case (filter (== Nothing) tokens) of
+                in case filter (== Nothing) tokens of
                     [] -> Just (map fromJust tokens)
                     _  -> Nothing
 
@@ -71,7 +69,7 @@ calc (TokInt x:TokInt y:xs) (TokOp Minus) = TokInt (y - x):xs
 calc (TokInt x:TokInt y:xs) (TokOp Mult)  = TokInt (x * y):xs
 calc (TokInt x:TokInt y:xs) (TokOp Div)   = TokInt (y `div` x):xs
 calc (tok:xs) (TokOp Dupl)                = tok:tok:xs
-calc (TokInt x:xs) (TokOp Flip)           = TokInt (0 - x):xs
+calc (TokInt x:xs) (TokOp Flip)           = TokInt (negate x):xs
 calc lst tok                              = tok:lst
 
 interpret :: Maybe [Token] -> Maybe [Token]
@@ -87,7 +85,7 @@ prec (TokOp Plus)  = 1
 prec (TokOp Minus) = 1
 
 opLeq :: Token -> Token -> Bool
-opLeq x y = (prec x <= prec y)
+opLeq x y = prec x <= prec y
 
 shunt :: Maybe [Token] -> Maybe [Token]
 shunt Nothing    = Nothing
@@ -98,7 +96,8 @@ si ops out []                = reverse (ops ++ out)
 si ops out (op@(TokOp _):xs) = opCompare op ops out xs
 si ops out (num:xs)          = si ops (num:out) xs
 
-opCompare x (y:xs) out inp = case (opLeq x y) of
-                                True -> opCompare x xs (y:out) inp
-                                False -> si (x:y:xs) out inp
+opCompare :: Token -> [Token] -> [Token] -> [Token] -> [Token]
+opCompare x (y:xs) out inp
+    | opLeq x y = opCompare x xs (y:out) inp
+    | otherwise = si (x:y:xs) out inp
 opCompare x ops out inp    = si (x:ops) out inp
