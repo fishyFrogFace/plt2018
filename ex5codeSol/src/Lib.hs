@@ -1,68 +1,104 @@
 module Lib
-    ( fun
-    , Maybe'(..)
-    , safeFib
-    , safeHead
-    , showHead
-    , fibOfHead
+    ( Token(..)
+    , Op(..)
+    , takeWhile
+    , dropWhile
+    , break
+    , splitOn
+    , lex
+    , tokenize
+    , interpret
+    , shunt
     ) where
 
-fun = undefined
+import Prelude hiding (lex)
+import Data.Char (isDigit)
+import Data.Maybe (fromJust)
 
-data Maybe' a = Thing a | NotAThing
+splitOn :: Eq a => a -> [a] -> [[a]]
+splitOn ch lst = let strip = dropWhile (==ch) lst
+                 in case strip of
+                    []     -> []
+                    (x:xs) -> n : (splitOn ch b)
+                                where
+                              (n, b) = break (==ch) strip
 
--- TASK 1
--- Partial functions
+data Token = TokOp Op
+           | TokInt Int
+           deriving (Eq, Show)
 
-fib :: Int -> Int
-fib 0 = 0
-fib 1 = 1
-fib n = fib (n-2) + fib (n-1)
+data Op = Plus
+        | Minus
+        | Div
+        | Mult
+        | Dupl
+        | Flip
+        deriving (Show, Eq)
 
--- complete the function "safeFib" that
--- returns Nothing if it's called with
--- a negative number
-safeFib :: Int -> Maybe Int
-safeFib n
-    | n < 0     = Nothing
-    | otherwise = Just (fib n)
+isInt :: String -> Bool
+isInt str
+    | filter (==False) (map isDigit str) == [] = True
+    | otherwise                                = False
 
--- create the function "safeHead" that takes
--- a list and returns the first element of
--- that list
--- if the list is empty, return Nothing
--- write an appropriate type signature
-safeHead :: [a] -> Maybe a
-safeHead []     = Nothing
-safeHead (x:xs) = Just x
+lex :: String -> [String]
+lex lst = splitOn ' ' lst
 
--- complete the function "showHead" that
--- takes a list and returns the String
--- "The first element is <x>" if the list
--- is not empty and the String "The list is
--- empty" if there is no first element
--- use "safeHead" to do this
-showHead :: Show a => [a] -> String
-showHead lst = case (safeHead lst) of
-                Nothing -> "The list is empty"
-                Just x  -> "The first element is " ++ show x
+opToTokOp :: String -> Maybe Op
+opToTokOp "+"  = Just Plus
+opToTokOp "-"  = Just Minus
+opToTokOp "/"  = Just Div
+opToTokOp "*"  = Just Mult
+opToTokOp "#"  = Just Dupl
+opToTokOp "--" = Just Flip
+opToTokOp _    = Nothing
 
--- OPTIONAL EXERCISE
--- complete the function "fibOfHead"
--- that takes a list of integers, takes
--- the first element of the list, n
--- and returns the nth fibonacci number
--- you will need to combine "safeHead"
--- and safeFib
--- hint: (>>=) :: Monad m => m a -> (a -> m b) -> m b 
-fibOfHead :: [Int] -> Maybe Int
-fibOfHead lst = safeHead lst >>= safeFib
+token :: String -> Maybe Token
+token lst
+    | isInt lst = Just $ TokInt (read lst)
+    | otherwise = case (opToTokOp lst) of
+                      Just x -> Just (TokOp x)
+                      _      -> Nothing
 
--- TASK 2
--- Using the type system
+tokenize :: [String] -> Maybe [Token]
+tokenize lst = let tokens = map token lst
+                in case (filter (== Nothing) tokens) of
+                    [] -> Just (map fromJust tokens)
+                    _  -> Nothing
 
--- TASK 3
--- Maybe
+calc :: [Token] -> Token -> [Token]
+calc (TokInt x:TokInt y:xs) (TokOp Plus)  = TokInt (x + y):xs
+calc (TokInt x:TokInt y:xs) (TokOp Minus) = TokInt (y - x):xs
+calc (TokInt x:TokInt y:xs) (TokOp Mult)  = TokInt (x * y):xs
+calc (TokInt x:TokInt y:xs) (TokOp Div)   = TokInt (y `div` x):xs
+calc (tok:xs) (TokOp Dupl)                = tok:tok:xs
+calc (TokInt x:xs) (TokOp Flip)           = TokInt (0 - x):xs
+calc lst tok                              = tok:lst
 
--- TASK 4
--- Either
+interpret :: Maybe [Token] -> Maybe [Token]
+interpret Nothing    = Nothing
+interpret (Just lst) = Just $ foldl calc [] lst
+
+prec :: Token -> Int
+prec (TokOp Flip)  = 3
+prec (TokOp Dupl)  = 3
+prec (TokOp Mult)  = 2
+prec (TokOp Div)   = 2
+prec (TokOp Plus)  = 1
+prec (TokOp Minus) = 1
+
+opLeq :: Token -> Token -> Bool
+opLeq x y = (prec x <= prec y)
+
+shunt :: Maybe [Token] -> Maybe [Token]
+shunt Nothing    = Nothing
+shunt (Just lst) = Just $ si [] [] lst
+
+si :: [Token] -> [Token] -> [Token] -> [Token]
+si ops out []                = reverse (ops ++ out)
+si ops out (op@(TokOp _):xs) = opCompare op ops out xs
+si ops out (num:xs)          = si ops (num:out) xs
+
+opCompare x (y:xs) out inp = case (opLeq x y) of
+                                True -> opCompare x xs (y:out) inp
+                                False -> si (x:y:xs) out inp
+opCompare x ops out inp    = si (x:ops) out inp
