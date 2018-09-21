@@ -4,7 +4,7 @@ import Lib
 import Control.Monad
 import System.Environment
 
-parseInfix :: String -> Maybe [Token]
+parseInfix :: String -> [Token]
 parseInfix = interpret . shunt . tokenize . Lib.lex
 
 main :: IO ()

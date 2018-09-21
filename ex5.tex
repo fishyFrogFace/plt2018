@@ -1,0 +1,276 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{Exercise 5}
+\author{NTNU}
+\date{TDT4165 fall 2018}
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Haskell,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=fixed,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\begin{document}
+
+\maketitle
+
+\newcounter{deloppgnr}
+\newenvironment{deloppgaver}%
+{\begin{list}{{\bf \alph{deloppgnr})}}%
+      {\usecounter{deloppgnr}
+        \setlength\topsep{0pt}
+       \setlength\partopsep{0pt}
+      }%
+}%
+{\end{list}}
+\textbf{All multiple choice answers should also contain a very brief explanation of why you chose the answer you did.}
+\section{Grammar}
+\subsection*{Task 1}
+Given the grammar G:
+\lstset{mathescape}
+\begin{lstlisting}
+    <S> ::= <A> | <B>
+    <A> ::= a <A> b | a <C> b | $\epsilon$
+    <B> ::= a <B> b b | $\epsilon$
+    <C> ::= c <C> c | $\epsilon$
+\end{lstlisting}
+(Where $\epsilon$ is the empty token.)\\
+
+Which of the following strings are not valid in L(G)?
+\begin{deloppgaver}
+    \item abb
+    \item aaccbb
+    \item caabbc
+    \item aabbbb
+\end{deloppgaver}
+
+\subsection*{Task 2}
+ What is the most specific class in the Chomsky hierarchy that this formal grammar belongs to?
+\begin{lstlisting}
+    <S> ::= <Z> | <Y>
+    <Z> ::= z <Z> y | z <Y> y | $\epsilon$
+    <Y> ::= z <Y> y x  | $\epsilon$
+\end{lstlisting}
+(Where $\epsilon$ is the empty token.)\\
+\begin{deloppgaver}
+    \item context-sensitive 
+    \item regular
+    \item unrestricted
+    \item context-free
+\end{deloppgaver}
+
+\subsubsection*{Task 3}
+An interpreter\ldots
+\begin{deloppgaver}
+    \item reads a sequence of characters and outputs a sequence of tokens.
+    \item translates a sequence of characters into a sequence of low-level instructions that can be executed on a machine.
+    \item reads a sequence of tokens and outputs an abstract syntax tree.
+    \item reads program code input as text and evaluates and prints the result of executing the code
+    \item traverses the syntax tree and generates low-level instructions for a real machine or an abstract machine.
+\end{deloppgaver}
+
+\subsection*{Task 4}
+A parser\ldots
+\begin{deloppgaver}
+    \item reads a sequence of characters and outputs a sequence of tokens.
+    \item translates a sequence of characters into a sequence of low-level instructions that can be executed on a machine.
+    \item reads a sequence of tokens and outputs an abstract syntax tree.
+    \item reads code input as text and evaluates and prints the result of executing the code
+    \item traverses the syntax tree and generates low-level instructions for a real machine or an abstract machine
+\end{deloppgaver}
+
+\subsection*{Task 5}
+Given the grammar \newline
+\begin{lstlisting}
+    <expression>    ::= <integer>  
+                         | ( <expression> <operator> <expression> ) 
+    <operator>      ::= + | - | * | / 
+    <integer>       ::= <nonzero digit> { <digit> } 
+    <digit>         ::= 0 | <nonzero digit>
+    <nonzero digit> ::= 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+\end{lstlisting}
+        
+How many parse trees can be generated for \texttt{1+2*3} with this grammar?
+\newline
+
+\begin{deloppgaver}
+    \item 1
+    \item 2
+    \item 3
+    \item 4
+\end{deloppgaver}
+
+\section{Scope and namespaces}
+\subsection*{Task 6}
+A namespace\ldots
+\begin{deloppgaver}
+    \item is a problem that develops if the same identifier is used to refer to two values in a region of code where both bindings are reachable
+    \item is the section of code where a binding is reachable
+    \item is a name that can be bound to an entity, e.g. types, values or functions
+    \item is an environment or abstract container that holds the set of bindings available at a given point in a program
+\end{deloppgaver}
+
+\subsection*{Task 7}
+A scope\ldots
+\begin{deloppgaver}
+    \item is a problem that develops if the same identifier is used to refer to two values in a region of code where both bindings are reachable
+    \item is the section of code where a binding is reachable
+    \item is a name that can be bound to an entity, e.g. types, values or functions
+    \item is an environment or abstract container that holds the set of bindings available at a given point in a program
+\end{deloppgaver}
+
+\subsection*{Task 8}
+\begin{lstlisting}
+a = 5
+
+func :: Show a => a -> String
+func a = show a
+\end{lstlisting}
+What is most correct about the code above?
+\newline
+
+\begin{deloppgaver}
+    \item the identifier \textbf{a}, which is bound to 5, has a global scope
+    \item the code will not compile because of a name collision
+    \item the identifier \textbf{a} is not in the namespace inside the function \textbf{func}
+    \item the scope of the identifier \textbf{a}, which is bound to 5, is the first two lines of the program
+\end{deloppgaver}
+
+\subsection*{Task 9}
+In \textbf{letter.hs}, three letter types are defined: Large, Medium and Small. How is it possible for them to have the same names in their record fields?
+Hint: Use \textbf{:set -ddump-simpl} in GHCi, load the file and locate the desugared \textbf{changeStatus} in the dump.
+
+\section{Exception handling}
+
+\subsection*{Partial functions}
+A \textbf{partial function} is a function that is undefined for some of its valid input. A function that returns a valid output for all possible input, is called a total function.
+\lstset{language=Haskell}
+\begin{lstlisting}
+--partial function
+(!!) :: [a] -> Int -> a
+(!!) (x:xs) n
+    | n == 0    = x
+    | otherwise = (!!) xs
+    
+--total function
+map :: (a -> b) -> [a] -> [b]
+map _ []     = []
+map f (x:xs) = f x : map f xs
+\end{lstlisting}
+Our index function will fail if the list is empty, or if we try to retrieve an element on an index larger than the list size. \textbf{map}, on the other hand, will always return a valid output.
+\subsection*{Task 10}
+\begin{lstlisting}
+(!!) :: [a] -> Int -> a
+(!!) [] _ = error "Index too large"
+(!!) (x:xs) n
+  | n < 0     = error "Negative index"
+  | n == 0    = x 
+  | otherwise = (!!) xs (n-1)
+\end{lstlisting}
+The edited index function above\ldots
+\begin{deloppgaver}
+    \item is a total function
+    \item is a partial function
+    \item is neither
+\end{deloppgaver}
+
+\subsection*{Task 11}
+\begin{lstlisting}
+(!!) :: [a] -> Int -> Maybe a
+(!!) [] _ = Nothing
+(!!) (x:xs) n
+  | n < 0     = Nothing
+  | n == 0    = Just x 
+  | otherwise = (!!) xs (n-1)
+\end{lstlisting}
+The function above\ldots
+\begin{deloppgaver}
+    \item is a total function
+    \item is a partial function
+    \item is neither
+\end{deloppgaver}
+
+\subsection*{Task 12}
+\begin{lstlisting}
+undefined :: a
+undefined = error "This value is undefined"
+\end{lstlisting}
+The value above\ldots
+\begin{deloppgaver}
+    \item is a total function
+    \item is a partial function
+    \item is neither
+\end{deloppgaver}
+
+\subsection*{Task 13}
+\begin{lstlisting}
+factorial :: Integer -> Integer
+factorial 0 = 1
+factorial n 
+    | n < 0     = 0
+    | otherwise = n * factorial (n-1)
+\end{lstlisting}
+The function above\ldots
+\begin{deloppgaver}
+    \item is a total function
+    \item is a partial function
+    \item is neither
+\end{deloppgaver}
+
+\subsection*{Task 14}
+We can use the type \textbf{Either} to return one of two types from a function.
+\lstset{mathescape=false}
+\begin{lstlisting}
+data Either a b = Left a | Right b deriving (Show)
+
+factorial :: Integer -> Either a Integer
+factorial n
+    | n < 0     = Left $ error "Factorial of negative number"
+    | otherwise = Right $ fact' n
+                    where
+                  fact' :: Integer -> Integer 
+                  fact' 0 = 1
+                  fact' n = n * fact' (n-1)
+\end{lstlisting}
+What is true about the two functions above?
+\begin{deloppgaver}
+    \item \textbf{factorial} is a partial function, because it contains a partial function \textbf{fact'}
+    \item \textbf{factorial} is a total function, because it always returns a valid output and does not cause a runtime error
+    \item \textbf{factorial} is a partial function, because it returns an error, which is equivalent to \textbf{undefined}
+    \item \textbf{fact'} is not a partial function
+\end{deloppgaver}
+
+\subsection*{Task 15}
+The type system can also be used to create more specific types, making sure that we only pass the values that we want to our functions. In \textbf{natfib.hs} we have created a natural number type, ensuring that our function \textbf{fib} only receives positive integers. \textbf{Provide at least one positive and negative property of this implementation.}\\
+\begin{lstlisting}
+--usage
+> toInteger . fib $ fromInteger 6
+8
+\end{lstlisting}
+
+For the curious student (not curriculum): Languages like Agda, Coq and Idris support a concept called \textit{dependent types}, which allows us to create extremely expressive types. Examples include \textit{a couple of integers where the first is larger than the second} and \textit{a list that is not infinite} (a vector). Examples in Idris can be found here: \url{http://docs.idris-lang.org/en/latest/tutorial/typesfuns.html#dependent-types}
+
+\subsection*{Task 16}
+In exercise 4, we used a type TokErr that circumvents the type system. Remove this Token type and rewrite the functions, using Maybe, Either or both. Maybe and Either are in Prelude and imported by default. Make sure none of your functions are partial.\\
+Hint: Try to minimize the amount of code affected. Functions like \textbf{fromJust} (a partial function!) from Data.Maybe and \textbf{rights}/\textbf{lefts} from Data.Either could help you with this. These functions need to be imported explicitly.
+
+\end{document}

@@ -2,42 +2,29 @@ import Test.Hspec
 import Test.QuickCheck
 
 import Lib
+import Prelude hiding (lex)
 
-genNegList :: Gen [Int]
-genNegList = sublistOf [-100, -1]
+genList :: Gen [Char]
+genList = sublistOf $ '.':[':'..'~']
 
-genList :: Gen [Int]
-genList = listOf1 $ elements [3..20]
-
-genNeg :: Gen Int
-genNeg = choose (-25, -1)
-
-fib21 = [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765]
+recList = [1,2,3,4,5] ++ recList
 
 main :: IO ()
 main = hspec $ do
-    describe "safeFib" $ do
-        it "returns Nothing for negative Integers" $ do
-            property $ forAll genNeg $ \n -> safeFib n == Nothing
-        it "returns Just nth for the nth fibonacci number" $ do
-            map safeFib [0..20] `shouldBe` map (\n -> Just n) fib21
-    
-    describe "safeHead" $ do
-        it "returns Nothing for empty list" $ do
-            safeHead [] `shouldBe` (Nothing :: Maybe Int)
-        it "returns Just x for x:tail" $ do
-            property $ forAll genList $ \n -> safeHead n == Just (head n)
+    describe "tokenize" $ do
+        it "tokenizes operators" $ do
+            tokenize ["*", "+", "-", "/"] `shouldBe` Just [TokOp Mult, TokOp Plus, TokOp Minus, TokOp Div]
+        it "tokenizes integers" $ do
+            tokenize ["1", "23", "3754924"] `shouldBe` Just [TokInt 1, TokInt 23, TokInt 3754924]
+        it "recognizes erroneous strings" $ do
+            property $ forAll genList $ \n -> tokenize [n] == Nothing
+        it "returns empty list for empty input" $ do
+            tokenize [] `shouldBe` (Just [] :: Maybe [Token])
 
-    describe "showHead" $ do
-        it "returns \"The list is empty\" for empty list" $ do
-            showHead ([] :: [Int]) `shouldBe` "The list is empty"
-        it "returns \"The first element is <x>\" for x:tail" $ do
-            property $ forAll genList $ \n -> showHead n == "The first element is " ++ show (head n)
-
-    describe "fibOfHead (OPTIONAL EXERCISE)" $ do
-        it "returns Nothing for negative Integers" $ do
-            property $ forAll genNegList $ \n -> fibOfHead n == Nothing
-        it "returns Just nth for the nth fibonacci number" $ do
-            map fibOfHead [[x] | x <- [0..20]] `shouldBe` map (\n -> Just n) fib21 
-        it "returns Nothing for empty list" $ do
-            fibOfHead [] `shouldBe` (Nothing :: Maybe Int)
+    describe "interpret" $ do
+        it "interprets a list of Tokens and returns the result" $ do
+            interpret (Just [TokInt 230, TokInt 5, TokOp Plus, TokInt 10, TokOp Minus]) `shouldBe` Just [TokInt 225]
+        it "returns empty list for empty input" $ do
+            interpret (Just []) `shouldBe` (Just [] :: Maybe [Token])
+        it "returns error token for erroneous input" $ do
+            interpret Nothing `shouldBe` Nothing
