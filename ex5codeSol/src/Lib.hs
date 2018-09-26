@@ -14,6 +14,7 @@ module Lib
 import Prelude hiding (lex)
 import Data.Char (isDigit)
 import Data.Maybe (fromJust)
+import Control.Monad (foldM)
 
 splitOn :: Eq a => a -> [a] -> [[a]]
 splitOn ch lst = let strip = dropWhile (==ch) lst
@@ -58,23 +59,27 @@ token lst
                       _      -> Nothing
 
 tokenize :: [String] -> Maybe [Token]
-tokenize lst = let tokens = map token lst
-                in case filter (== Nothing) tokens of
-                    [] -> Just (map fromJust tokens)
-                    _  -> Nothing
+tokenize lst = anyNothing $ map token lst
 
-calc :: [Token] -> Token -> [Token]
-calc (TokInt x:TokInt y:xs) (TokOp Plus)  = TokInt (x + y):xs
-calc (TokInt x:TokInt y:xs) (TokOp Minus) = TokInt (y - x):xs
-calc (TokInt x:TokInt y:xs) (TokOp Mult)  = TokInt (x * y):xs
-calc (TokInt x:TokInt y:xs) (TokOp Div)   = TokInt (y `div` x):xs
-calc (tok:xs) (TokOp Dupl)                = tok:tok:xs
-calc (TokInt x:xs) (TokOp Flip)           = TokInt (negate x):xs
-calc lst tok                              = tok:lst
+anyNothing :: Eq a => [Maybe a] -> Maybe [a]
+anyNothing lst = case filter (==Nothing) lst of
+                  [] -> Just (map fromJust lst)
+                  _  -> Nothing
+
+calc :: [Token] -> Token -> Maybe [Token]
+calc (TokInt x:TokInt y:xs) (TokOp Plus)  = Just $ TokInt (x + y):xs
+calc (TokInt x:TokInt y:xs) (TokOp Minus) = Just $ TokInt (y - x):xs
+calc (TokInt x:TokInt y:xs) (TokOp Mult)  = Just $ TokInt (x * y):xs
+calc (TokInt x:TokInt y:xs) (TokOp Div)   = case x of
+                                             0 -> Nothing
+                                             _ -> Just $ TokInt (y `div` x):xs
+calc (tok:xs) (TokOp Dupl)                = Just $ tok:tok:xs
+calc (TokInt x:xs) (TokOp Flip)           = Just $ TokInt (negate x):xs
+calc lst tok                              = Just $ tok:lst
 
 interpret :: Maybe [Token] -> Maybe [Token]
 interpret Nothing    = Nothing
-interpret (Just lst) = Just $ foldl calc [] lst
+interpret (Just lst) = foldM calc [] lst
 
 prec :: Token -> Int
 prec (TokOp Flip)  = 3
