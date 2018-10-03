@@ -1,4 +1,9 @@
+import java.util.concurrent.atomic.AtomicInteger
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 object Hello extends App {
+	
 	// 1a
 	println("Hello World")
 
@@ -8,6 +13,7 @@ object Hello extends App {
 
 	// 1c
 	(51 to 100).map((x: Int) => generated :+= x)
+	println("generated:" + generated.mkString(" "))
 
 	// 1d
 	def sum_for_loop(input: Array[Int]): Int = {
@@ -15,6 +21,14 @@ object Hello extends App {
 		for (i <- input) sum += i
 		sum
 	}
+
+	def updateLast(lsto: List[String], y: String): List[String] = lsto match {
+		case Nil => List(y)
+		case x :: xs => x::updateLast(xs,y)
+
+	}
+	val first = List("A","B","C","D")
+	println(updateLast(first,"Lul"))
 
 	// 1e
 	def sum_recursive(input: Array[Int]): Int = {
@@ -68,8 +82,7 @@ object Hello extends App {
 	// Save memory. Infinite lists. Streams. 
 
 
-
- 	/**************************************************** TASK 3 ****************************************************/
+	/**************************************************** TASK 3 ****************************************************/
 	// 3a
 	def thread(f: () => Unit): Thread = {
 		// This creates a thread by overriding a class method with another implementation. The thread is not yet started.
@@ -135,4 +148,4 @@ object Hello extends App {
 	}
 
 
-}
+} 
